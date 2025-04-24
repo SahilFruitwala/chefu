@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen justify-center items-center min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-        <header className="text-center mb-12">
+        {/* <header className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 mb-4 bg-primary/10 rounded-full">
             <UtensilsCrossed className="w-8 h-8 text-primary" />
           </div>
@@ -76,7 +76,7 @@ export default function Home() {
             Transform your available ingredients into delicious meals with our
             AI-powered recipe generator
           </p>
-        </header>
+        </header> */}
 
         <div className="grid lg:grid-cols-2 gap-8 items-start">
           <RecipeForm onSubmit={generateRecipe} isLoading={isLoading} />

@@ -40,9 +40,9 @@ export function NavUser({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
+      {/* <SidebarMenuItem>
         <ThemeSwitcher atSidebar={true} state={state} />
-      </SidebarMenuItem>
+      </SidebarMenuItem> */}
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
