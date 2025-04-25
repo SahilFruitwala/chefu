@@ -46,7 +46,7 @@ export function TeamSwitcher({
             <UtensilsCrossed className="size-4" />
           </div>
           <div className="grid flex-1 text-left leading-tight text-lg">
-            <span className="truncate font-semibold">Plate Pal</span>
+            <span className="truncate font-semibold">Chefu</span>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
