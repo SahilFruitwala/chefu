@@ -11,11 +11,13 @@ import { UtensilsCrossed } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import generatRecipePrompt, { parseRecipe } from "@/lib/prompt";
 import { getRecipe } from "./actions";
-import RecipeCard from "@/components/RecipeCard";
+import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
+import AuthModal from "@/components/AuthModal";
 
 export default function Home() {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(true);
 
   const generateRecipe = async (formData: any) => {
     try {
@@ -61,6 +63,10 @@ export default function Home() {
           /> */}
         </div>
       </div>
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
       <Toaster richColors closeButton />
     </main>
   );

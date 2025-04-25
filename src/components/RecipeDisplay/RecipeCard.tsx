@@ -1,12 +1,19 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Clock, Utensils, Users, CheckCircle2 } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { Recipe } from "@/lib/types";
-import LoadingState from "./RecipeDisplay/LoadingState";
-import EmptyState from "./RecipeDisplay/EmptyState";
+import LoadingState from "@/components/RecipeDisplay/LoadingState";
+import EmptyState from "@/components/RecipeDisplay/EmptyState";
 
 export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe, isLoading: boolean }) {
   if (isLoading) {
