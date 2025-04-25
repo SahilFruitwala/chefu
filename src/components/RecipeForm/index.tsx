@@ -11,16 +11,18 @@ import { Loader2, Sparkles } from "lucide-react";
 import IngredientInput from "./IngredientInput";
 import EquipmentSelector from "./EquipmentSelector";
 import FormFields from "./FormFields";
-import { DIETARY_RESTRICTIONS, MEAL_TYPES, COOKING_TIMES, SKILL_LEVELS, CUISINE_TYPES, FormValues } from "@/lib/types";
+import { DIETARY_RESTRICTIONS, MEAL_TYPES, COOKING_TIMES, SKILL_LEVELS, FormValues, EQUIPMENT_OPTIONS } from "@/lib/types";
+import AllergiesInput from "./AllergiesInput";
 
 const formSchema = z.object({
   ingredients: z.array(z.string()).min(1, "Add at least one ingredient"),
-  equipment: z.array(z.string()),
+  equipment: z.array(z.string()).default([EQUIPMENT_OPTIONS[0].id]),
   dietaryRestrictions: z.string().default(DIETARY_RESTRICTIONS[0].value),
+  allergies: z.array(z.string()),
   mealType: z.string().default(MEAL_TYPES[0].value),
   cookingTime: z.string().default(COOKING_TIMES[0].value),
   skillLevel: z.string().default(SKILL_LEVELS[0].value),
-  cuisineType: z.string().default(CUISINE_TYPES[0].value),
+  servings: z.string().default("1"),
 });
 
 interface RecipeFormProps {
@@ -33,12 +35,13 @@ export default function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       ingredients: [],
-      equipment: [],
+      equipment: [EQUIPMENT_OPTIONS[0].id],
       dietaryRestrictions: DIETARY_RESTRICTIONS[0].value,
+      allergies: [],
       mealType: MEAL_TYPES[0].value,
       cookingTime: COOKING_TIMES[0].value,
       skillLevel: SKILL_LEVELS[0].value,
-      cuisineType: CUISINE_TYPES[0].value,
+      servings: "1",
     },
   });
 
@@ -49,12 +52,13 @@ export default function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
   const handleClearForm = () => {
     form.reset({
       ingredients: [],
-      equipment: [],
+      equipment: [EQUIPMENT_OPTIONS[0].id],
       dietaryRestrictions: DIETARY_RESTRICTIONS[0].value,
+      allergies: [],
       mealType: MEAL_TYPES[0].value,
       cookingTime: COOKING_TIMES[0].value,
       skillLevel: SKILL_LEVELS[0].value,
-      cuisineType: CUISINE_TYPES[0].value,
+      servings: "1",
     });
   };
 
@@ -68,15 +72,19 @@ export default function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleFormSubmit)}
+            className="space-y-6"
+          >
             <IngredientInput form={form} />
             <EquipmentSelector form={form} />
+            <AllergiesInput form={form} />
             <FormFields form={form} />
-            
+
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button 
-                type="submit" 
-                className="flex-1 gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+              <Button
+                type="submit"
+                className="flex-1 gap-2 bg-gradient-to-r from-primary to-primary/80 shadow-lg hover:shadow-md hover:shadow-blue-700"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -86,9 +94,9 @@ export default function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                 )}
                 {isLoading ? "Creating Recipe..." : "Generate Recipe"}
               </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={handleClearForm}
                 className="flex-1"
                 disabled={isLoading}

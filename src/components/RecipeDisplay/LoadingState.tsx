@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 
 export default function LoadingState() {
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-8 animate-in fade-in duration-300 p-4">
       <div className="space-y-4">
         <Skeleton className="h-10 w-3/4" />
         <div className="flex flex-wrap gap-2">

@@ -1,0 +1,91 @@
+"use client";
+
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Clock, Utensils, Users, CheckCircle2 } from "lucide-react";
+import { Separator } from "./ui/separator";
+import { Recipe } from "@/lib/types";
+import LoadingState from "./RecipeDisplay/LoadingState";
+import EmptyState from "./RecipeDisplay/EmptyState";
+
+export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe, isLoading: boolean }) {
+  if (isLoading) {
+    return <Card className="w-full h-[1098px] flex flex-col shadow-md transition-all duration-300 hover:shadow-lg">
+      <LoadingState />
+    </Card>;
+  }
+
+  if (!recipe) {
+    return (
+      <Card className="w-full h-[1098px] flex flex-col shadow-md transition-all duration-300 hover:shadow-lg">
+        <EmptyState />
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="w-full h-auto md:h-[1098px] flex flex-col transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-blue-700">
+      <CardHeader className="pb-2 flex-shrink-0">
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-xl">{recipe.title}</CardTitle>
+            <CardDescription>{recipe.description}</CardDescription>
+          </div>
+        </div>
+        <div className="flex gap-2 flex-wrap mt-2">
+          {recipe.tags.map((tag, i) => (
+            <Badge key={i} variant="secondary">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </CardHeader>
+
+      <CardContent className="pb-0 space-y-4 overflow-y-auto flex-1">
+        <div className="flex flex-wrap gap-4 text-sm mt-2">
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{recipe.time}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Utensils className="h-4 w-4" />
+            <span>{recipe.difficulty}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Users className="h-4 w-4" />
+            <span>{recipe.servings} servings</span>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div>
+          <h3 className="font-medium mb-2">Ingredients</h3>
+          <ul className="space-y-1 text-sm">
+            {recipe.ingredients.map((ingredient, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                <span>{ingredient}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-medium mb-2">Instructions</h3>
+          <ol className="space-y-2 text-sm list-decimal list-inside">
+            {recipe.instructions.map((step, i) => (
+              <li key={i} className="pl-2">
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </CardContent>
+
+      <CardFooter className="pt-4 text-sm text-muted-foreground flex-shrink-0">
+        <p>{recipe.note}</p>
+      </CardFooter>
+    </Card>
+  );
+}

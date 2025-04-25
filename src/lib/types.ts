@@ -3,22 +3,24 @@ export interface Recipe {
   title: string;
   ingredients: string[];
   equipment: string[];
+  allergies: string[];
   instructions: string[];
   dietaryInfo: string;
   cookingTime: string;
   skillLevel: string;
-  cuisineType: string;
+  servings: string;
   imageUrl: string;
 }
 
 export interface FormValues {
   ingredients: string[];
   equipment: string[];
+  allergies: string[];
   dietaryRestrictions: string;
   mealType: string;
   cookingTime: string;
   skillLevel: string;
-  cuisineType: string;
+  servings: string;
 }
 
 export const EQUIPMENT_OPTIONS = [
