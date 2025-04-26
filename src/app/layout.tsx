@@ -32,11 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
-          <SidebarProvider>
+          <SidebarProvider defaultOpen={false}>
             <AppSidebar variant="inset" />
             <SidebarInset>
-            <SiteHeader />
-            {children}
+              <SiteHeader />
+              {children}
             </SidebarInset>
           </SidebarProvider>
         </ThemeProvider>

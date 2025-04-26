@@ -1,5 +1,7 @@
 // import { RecipeData } from "./types";
 
+import { Recipe } from "./types";
+
 export default function generatRecipePrompt(
   ingredients: Array<string>,
   equipment: Array<string>,
@@ -56,9 +58,8 @@ Generate the recipe using this structure and nothing else.
 `;
 };
 
-export const parseRecipe = (recipeText: string) => {
-  const recipeData = {};
-  console.log(recipeText)
+export const parseRecipe = (recipeText: string): Recipe => {
+  const recipeData: any = {};
   const lines = recipeText.trim().split("\n");
   let currentSection = "";
 
@@ -108,5 +109,5 @@ export const parseRecipe = (recipeText: string) => {
       );
     }
   }
-  return recipeData;
+  return recipeData as Recipe;
 };

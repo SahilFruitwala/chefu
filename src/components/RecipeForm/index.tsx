@@ -84,7 +84,7 @@ export default function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
                 type="submit"
-                className="flex-1 gap-2 bg-gradient-to-r from-primary to-primary/80 shadow-lg hover:shadow-md hover:shadow-blue-700"
+                className="flex-1 gap-2 bg-gradient-to-r from-primary to-primary/80 shadow-lg hover:shadow-md hover:shadow-amber-400"
                 disabled={isLoading}
               >
                 {isLoading ? (

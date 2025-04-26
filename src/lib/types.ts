@@ -1,15 +1,15 @@
 export interface Recipe {
-  id: string;
   title: string;
+  description: string;
+  cuisine: string;
+  style: string;
+  tags: string[];
+  time: string;
+  difficulty: string;
+  servings: number;
   ingredients: string[];
-  equipment: string[];
-  allergies: string[];
   instructions: string[];
-  dietaryInfo: string;
-  cookingTime: string;
-  skillLevel: string;
-  servings: string;
-  imageUrl: string;
+  note?: string;
 }
 
 export interface FormValues {
@@ -32,7 +32,7 @@ export const EQUIPMENT_OPTIONS = [
   { id: "slowCooker", label: "Slow Cooker" },
   { id: "instantPot", label: "Instant Pot" },
   { id: "airFryer", label: "Air Fryer" },
-  { id: "grill", label: "Grill" }
+  { id: "grill", label: "Grill" },
 ];
 
 export const MEAL_TYPES = [
@@ -41,7 +41,7 @@ export const MEAL_TYPES = [
   { value: "dinner", label: "Dinner" },
   { value: "dessert", label: "Dessert" },
   { value: "snack", label: "Snack" },
-  { value: "appetizer", label: "Appetizer" }
+  { value: "appetizer", label: "Appetizer" },
 ];
 
 export const DIETARY_RESTRICTIONS = [
@@ -52,20 +52,20 @@ export const DIETARY_RESTRICTIONS = [
   { value: "dairyFree", label: "Dairy-Free" },
   { value: "nutFree", label: "Nut-Free" },
   { value: "lowCarb", label: "Low Carb" },
-  { value: "keto", label: "Keto" }
+  { value: "keto", label: "Keto" },
 ];
 
 export const COOKING_TIMES = [
   { value: "under15", label: "Under 15 minutes" },
   { value: "under30", label: "Under 30 minutes" },
   { value: "under60", label: "Under 1 hour" },
-  { value: "over60", label: "Over 1 hour" }
+  { value: "over60", label: "Over 1 hour" },
 ];
 
 export const SKILL_LEVELS = [
   { value: "beginner", label: "Beginner" },
   { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" }
+  { value: "advanced", label: "Advanced" },
 ];
 
 export const CUISINE_TYPES = [
@@ -76,5 +76,5 @@ export const CUISINE_TYPES = [
   { value: "mediterranean", label: "Mediterranean" },
   { value: "american", label: "American" },
   { value: "indian", label: "Indian" },
-  { value: "french", label: "French" }
+  { value: "french", label: "French" },
 ];
