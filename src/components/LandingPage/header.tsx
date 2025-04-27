@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -63,10 +68,17 @@ export function Header() {
         <div className="flex items-center gap-4">
           <ThemeSwitcher />
           <div className="hidden md:flex gap-2">
-            <Button variant="outline" size="sm">
-              Log in
-            </Button>
-            <Button size="sm">Sign up</Button>
+            <SignedOut>
+              <Button variant="outline" size="sm">
+                <Link href="/sign-in">Sign in</Link>
+              </Button>
+              <Button size="sm">
+                <Link href="/sign-up">Sign up</Link>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
 
           <Sheet>
@@ -103,8 +115,17 @@ export function Header() {
                   Pricing
                 </Link>
                 <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline">Log in</Button>
-                  <Button>Sign up</Button>
+                  <SignedIn>
+                    <UserButton />
+                  </SignedIn>
+                  <SignedOut>
+                    <Button variant="outline" asChild>
+                      <Link href="/sign-in">Log in</Link>
+                    </Button>
+                    <Button>
+                      <Link href="/sign-up">Sign up</Link>
+                    </Button>
+                  </SignedOut>
                 </div>
               </nav>
             </SheetContent>

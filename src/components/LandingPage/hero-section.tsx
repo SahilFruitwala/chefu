@@ -8,7 +8,7 @@ import { motion } from "@/components/ui/motion";
 
 export function HeroSection() {
   return (
-    <section className="relative py-20 md:py-28 overflow-hidden">
+    <section className="relative py-20 md:py-10 overflow-hidden">
       <div className=" relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
