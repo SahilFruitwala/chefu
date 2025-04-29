@@ -8,7 +8,7 @@ import {
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import { UtensilsCrossed, Menu } from "lucide-react";
 
@@ -89,7 +89,8 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <nav className="flex flex-col gap-4 mt-8">
+              <SheetTitle className="hidden">Navigation</SheetTitle>
+              <nav className="flex flex-col gap-4 mt-8 px-4">
                 <Link
                   href="#features"
                   className="text-base font-medium hover:text-primary/80 transition-colors"
