@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,18 +22,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
       <html>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ThemeProvider attribute="class" defaultTheme="light">
-            {children}
-          </ThemeProvider>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <PostHogProvider>
+            <ThemeProvider attribute="class" defaultTheme="light">
+              {children}
+            </ThemeProvider>
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
