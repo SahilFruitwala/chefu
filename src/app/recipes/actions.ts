@@ -49,6 +49,11 @@ export async function getRecipe(
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
       contents: recipePrompt,
+      config: {
+        systemInstruction:
+          "You are a professional chef. You know recipes of every kind, every type and of evry falvors.",
+        temperature: 0.5,
+      },
     });
     return { data: response.text || "", error: null };
   } catch (err: any) {

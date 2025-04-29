@@ -14,9 +14,11 @@ export default function generatRecipePrompt(
 ) {
   return `You are a recipe generator.
 
-Based on the user's input, generate a complete recipe using the structure below. Your response MUST follow this format exactly — no extra notes, no missing sections, and no creative formatting. This will be parsed by a program. 
+Based on the user's input, generate a complete recipe using the structure below. Your response MUST follow this format exactly — no extra notes, no missing sections, and no creative formatting. This will be parsed by a program. And remeber this is important do not use any extra ingredient apart from what is mentioned.
 
-Important information: Consider Eggs  and any egg dish as non-vegetarian and give me a non-vegetarian tag.
+If the ingredients include any meat, poultry, seafood, or egg, create a non-vegetarian recipe.
+If the ingredients are all plant-based or dairy, create a vegetarian recipe and do not add any non-vegetarian items.
+Do not assume or add ingredients not in the list unless they are basic pantry staples like salt, oil, or water.
 
 Respond in plain text using this exact structure:
 
