@@ -18,7 +18,17 @@ import LoadingState from "@/components/RecipeDisplay/LoadingState";
 import EmptyState from "@/components/RecipeDisplay/EmptyState";
 import { parseRecipe } from "@/lib/prompt";
 
-export default function RecipeCard({ recipe, isLoading, onSave }: { recipe: String | null, isLoading: boolean, onSave: () => void }) {
+export default function RecipeCard({
+  recipe,
+  isLoading,
+  onSave,
+  readOnly = false,
+}: {
+  recipe: String | null;
+  isLoading: boolean;
+  onSave: () => void;
+  readOnly?: boolean;
+}) {
   if (isLoading) {
     return (
       <Card className="w-full h-[1098px] flex flex-col shadow-md transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
@@ -98,6 +108,7 @@ export default function RecipeCard({ recipe, isLoading, onSave }: { recipe: Stri
           </div>
         </CardContent>
 
+        {!readOnly && (
         <CardFooter className="pt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
           <p className="text-sm text-muted-foreground">{extractedData.note}</p>
           <div className="flex gap-2">
@@ -111,6 +122,7 @@ export default function RecipeCard({ recipe, isLoading, onSave }: { recipe: Stri
             </Button>
           </div>
         </CardFooter>
+        )}
       </Card>
     </div>
   );

@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSavedRecipes, removeSavedRecipe } from "@/lib/storage";
 import { Recipe } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { History, Trash2 } from "lucide-react";
 import { getRecipeForUser } from "../actions";
 import { useUser } from "@clerk/nextjs";
-import { parseRecipe } from "@/lib/prompt";
 import { SelectRecipe } from "@/db/schema";
 
 export default function HistoryPage() {
@@ -31,7 +29,7 @@ export default function HistoryPage() {
     loadRecipes();
   }, []);
 
-  const handleDeleteRecipe = (id: string) => {
+  const handleDeleteRecipe = (id: number) => {
     // removeSavedRecipe(id);
     // const updatedRecipes = recipes.filter((recipe) => recipe.id !== id);
     // setRecipes(updatedRecipes);
@@ -72,7 +70,7 @@ export default function HistoryPage() {
                       variant="ghost"
                       size="icon"
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => handleDeleteRecipe(recipe.id)}
+                      onClick={() => {}}
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
@@ -82,7 +80,7 @@ export default function HistoryPage() {
             </div>
 
             <div>
-              <RecipeCard recipe={selectedRecipe.recipe} isLoading={false} />
+              <RecipeCard recipe={selectedRecipe?.recipe!} isLoading={false} readOnly={true} onSave={() => {}}/>
             </div>
           </div>
         ) : (

@@ -67,7 +67,7 @@ export async function getUser(email: string): Promise<Array<SelectUser>> {
   return db.select().from(users).where(eq(users.email, email)).limit(1);
 }
 
-export async function getRecipeCountForUser(userId: String): Promise<number> {
+export async function getRecipeCountForUser(userId: string): Promise<number> {
   const recipeCount = await db
     .select({ count: count() })
     .from(recipes)

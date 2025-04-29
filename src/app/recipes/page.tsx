@@ -19,8 +19,8 @@ export default function RecipeHome() {
   const fromPath = searchParams.get("from");
 
   const { user } = useUser();
-
-  const {id: userId, primaryEmailAddress: { emailAddress }} = user!;
+  const { id: userId, primaryEmailAddress } = user!;
+  const emailAddress = primaryEmailAddress?.emailAddress!;
 
   useEffect(() => {
     if (fromPath && fromPath === "sign-up" && emailAddress) {

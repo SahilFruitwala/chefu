@@ -40,9 +40,11 @@ export function NavUser() {
 
   const {
     firstName,
-    primaryEmailAddress: { emailAddress },
+    primaryEmailAddress,
     imageUrl,
   } = user!;
+
+  const emailAddress = primaryEmailAddress?.emailAddress!;
 
   return (
     <SidebarMenu>
