@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export function CtaSection() {
   return (
@@ -57,7 +58,9 @@ export function CtaSection() {
               </CardContent>
               <CardFooter>
                 <Button variant="outline" className="w-full">
-                  Get started free
+                  <Link href="/signup" className="flex items-center">
+                    Get started free
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -100,8 +103,10 @@ export function CtaSection() {
               </CardContent>
               <CardFooter>
                 <Button className="w-full">
-                  <span>Get started</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <Link href="/signup" className="flex items-center">
+                    <span>Get started</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -152,8 +157,10 @@ export function CtaSection() {
           </h3>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="group">
-              <span>Get started for free</span>
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <Link href="/signup" className="flex items-center">
+                <span>Get started for free</span>
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </Button>
             {/* <Button size="lg" variant="outline">
               View all features
