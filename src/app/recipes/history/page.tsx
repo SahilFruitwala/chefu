@@ -49,38 +49,56 @@ export default function HistoryPage() {
       <div className="max-w-7xl mx-auto">
         {recipes.length > 0 ? (
           <div className="grid lg:grid-cols-2 gap-8 items-start">
-            <div className="space-y-4">
-              <h2 className="text-lg font-semibold mb-4">Saved Recipes</h2>
-              <div className="space-y-2">
+            <div className="space-y-6 bg-card rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <History className="h-5 w-5 text-primary" />
+                Saved Recipes
+              </h2>
+              <div className="space-y-2 max-h-[400px] pr-8 rounded-lg">
                 {recipes.map((recipe) => (
                   <div
                     key={recipe.id}
-                    className="flex items-center justify-between group"
+                    className={`flex items-center justify-between rounded-lg transition-colors ${
+                      selectedRecipe?.id === recipe.id
+                        ? "bg-primary/10"
+                        : "hover:bg-muted"
+                    } group`}
                   >
                     <Button
                       variant={
                         selectedRecipe?.id === recipe.id ? "default" : "ghost"
                       }
-                      className="w-full justify-start h-auto py-3 px-4"
+                      className={`w-full justify-start h-auto py-3 px-4 rounded-lg text-left font-medium transition-colors`}
                       onClick={() => setSelectedRecipe(recipe)}
                     >
                       <span className="truncate">{recipe.title}</span>
                     </Button>
-                    {/* <Button
+                    {/* Uncomment and implement delete logic to enable delete button */}
+                    <Button
                       variant="ghost"
                       size="icon"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => {}}
+                      className={`${
+                        selectedRecipe?.id === recipe.id
+                          ? "opacity-100"
+                          : "opacity-30"
+                      } group-hover:opacity-100 transition-opacity ml-2  hover:bg-destructive/10`}
+                      onClick={() => handleDeleteRecipe(recipe.id)}
+                      aria-label={`Delete ${recipe.title}`}
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button> */}
+                      <Trash2 className="h-4 w-4 text-destructive group-hover:scale-110 transition-transform" />
+                    </Button>
                   </div>
                 ))}
               </div>
             </div>
 
             <div>
-              <RecipeCard recipe={selectedRecipe?.recipe!} isLoading={false} readOnly={true} onSave={() => {}}/>
+              <RecipeCard
+                recipe={selectedRecipe?.recipe!}
+                isLoading={false}
+                readOnly={true}
+                onSave={() => {}}
+              />
             </div>
           </div>
         ) : (

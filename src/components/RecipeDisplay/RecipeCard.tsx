@@ -7,9 +7,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save, Printer, Flame, Dumbbell, Wheat, Droplet, Leaf, Candy } from "lucide-react";
+import {
+  Save,
+  Printer,
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplet,
+  Leaf,
+  Candy,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Utensils, Users, CheckCircle2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -45,6 +54,10 @@ export default function RecipeCard({
   }
 
   const extractedData = parseRecipe(recipe || "");
+
+  const nutrition = extractedData.nutrition;
+  console.clear()
+  console.log(nutrition)
 
   return (
     <div id="print-area">
@@ -84,55 +97,81 @@ export default function RecipeCard({
           <Separator />
 
           {/* Nutrition Information */}
-          {(extractedData.nutrition && extractedData.nutrition?.calories) && (
+          {nutrition && (
             <div className="mt-4">
-              <h3 className="font-medium mb-2">Nutrition Information</h3>
+              {(nutrition?.calories ||
+                nutrition?.sugar ||
+                nutrition?.fat ||
+                nutrition?.fiber ||
+                nutrition?.protein ||
+                nutrition?.carbohydrates) && (
+                <h3 className="font-medium mb-2">Nutrition Information</h3>
+              )}
               <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2">
-                  <Flame className="h-4 w-4" />
-                  Calories: {extractedData.nutrition.calories} kcal
-                </li>
-                <li className="flex items-center gap-2">
-                  <Dumbbell className="h-4 w-4" />
-                  Protein: {extractedData.nutrition.protein} g
-                </li>
-                <li className="flex items-center gap-2">
-                  <Wheat className="h-4 w-4" />
-                  Carbohydrates: {extractedData.nutrition.carbohydrates} g
-                </li>
-                <li className="flex items-center gap-2">
-                  <Droplet className="h-4 w-4" />
-                  Fat: {extractedData.nutrition.fat} g
-                </li>
-                <li className="flex items-center gap-2">
-                  <Leaf className="h-4 w-4" />
-                  Fiber: {extractedData.nutrition.fiber} g
-                </li>
-                <li className="flex items-center gap-2">
-                  <Candy className="h-4 w-4" />
-                  Sugar: {extractedData.nutrition.sugar} g
-                </li>
+                {nutrition?.calories !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Flame className="h-4 w-4" />
+                    Calories: {nutrition.calories} kcal
+                  </li>
+                )}
+                {nutrition?.protein !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Dumbbell className="h-4 w-4" />
+                    Protein: {nutrition.protein} g
+                  </li>
+                )}
+                {nutrition?.carbohydrates !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Wheat className="h-4 w-4" />
+                    Carbohydrates: {nutrition.carbohydrates} g
+                  </li>
+                )}
+                {nutrition?.fat !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Droplet className="h-4 w-4" />
+                    Fat: {nutrition.fat} g
+                  </li>
+                )}
+                {nutrition?.fiber !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Leaf className="h-4 w-4" />
+                    Fiber: {nutrition.fiber} g
+                  </li>
+                )}
+                {nutrition?.sugar !== undefined && (
+                  <li className="flex items-center gap-2">
+                    <Candy className="h-4 w-4" />
+                    Sugar: {nutrition.sugar} g
+                  </li>
+                )}
               </ul>
 
-              <div className="mt-3 flex items-center gap-2 p-2 border border-yellow-100 rounded text-xs">
-                <svg
-                  className="w-3 h-3 text-yellow-400 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span>
-                  Nutrition facts may not be fully accurate. Please verify with
-                  trusted sources.
-                </span>
-              </div>
+              {(nutrition?.calories ||
+                nutrition?.sugar ||
+                nutrition?.fat ||
+                nutrition?.fiber ||
+                nutrition?.protein ||
+                nutrition?.carbohydrates) && (
+                <div className="mt-3 flex items-center gap-2 p-2 border border-yellow-100 rounded text-xs">
+                  <svg
+                    className="w-3 h-3 text-yellow-400 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>
+                    Nutrition facts may not be fully accurate. Please verify
+                    with trusted sources.
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
