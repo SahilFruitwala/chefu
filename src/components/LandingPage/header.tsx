@@ -8,7 +8,7 @@ import {
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import { UtensilsCrossed, Menu } from "lucide-react";
 
@@ -33,7 +33,14 @@ export function Header() {
       }`}
     >
       <div className="flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link
+          href="/"
+          className="flex items-center space-x-2"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
           <UtensilsCrossed className="h-6 w-6" />
           <span className="font-bold text-xl">Chefu</span>
         </Link>
@@ -42,24 +49,45 @@ export function Header() {
           <Link
             href="#features"
             className="text-sm font-medium hover:text-primary/80 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              const section = document.getElementById("features");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             Features
           </Link>
           <Link
             href="#demo"
             className="text-sm font-medium hover:text-primary/80 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              const section = document.getElementById("demo");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             Demo
           </Link>
-          <Link
+          {/* <Link
             href="#testimonials"
             className="text-sm font-medium hover:text-primary/80 transition-colors"
           >
             Testimonials
-          </Link>
+          </Link> */}
           <Link
             href="#pricing"
             className="text-sm font-medium hover:text-primary/80 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              const section = document.getElementById("pricing");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             Pricing
           </Link>
@@ -91,30 +119,36 @@ export function Header() {
             <SheetContent side="right">
               <SheetTitle className="hidden">Navigation</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8 px-4">
-                <Link
-                  href="#features"
-                  className="text-base font-medium hover:text-primary/80 transition-colors"
-                >
-                  Features
-                </Link>
-                <Link
-                  href="#demo"
-                  className="text-base font-medium hover:text-primary/80 transition-colors"
-                >
-                  Demo
-                </Link>
-                <Link
+                <SheetClose asChild>
+                  <Link
+                    href="#features"
+                    className="text-base font-medium hover:text-primary/80 transition-colors"
+                  >
+                    Features
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    href="#demo"
+                    className="text-base font-medium hover:text-primary/80 transition-colors"
+                  >
+                    Demo
+                  </Link>
+                </SheetClose>
+                {/* <Link
                   href="#testimonials"
                   className="text-base font-medium hover:text-primary/80 transition-colors"
                 >
                   Testimonials
-                </Link>
+                </Link> */}
+                <SheetClose asChild>
                 <Link
                   href="#pricing"
                   className="text-base font-medium hover:text-primary/80 transition-colors"
                 >
                   Pricing
                 </Link>
+                </SheetClose>
                 <div className="flex flex-col gap-2 mt-4">
                   <SignedIn>
                     <UserButton />

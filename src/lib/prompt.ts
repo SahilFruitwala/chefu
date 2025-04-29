@@ -31,6 +31,14 @@ Time: <Total time, e.g., 45 mins>
 Difficulty: <Easy | Medium | Hard>  
 Servings: <Number of servings>
 
+Nutrition (per serving):  
+Calories: <X kcal>  
+Protein: <X g>  
+Carbohydrates: <X g>  
+Fat: <X g>  
+Fiber: <X g>  
+Sugar: <X g>
+
 Ingredients:  
 - <Ingredient 1>  
 - <Ingredient 2>  
@@ -62,9 +70,9 @@ Generate the recipe using this structure and nothing else.
 
 export const parseRecipe = (recipeText: String): Recipe => {
   const recipeData: any = {};
-  console.log("Selected Recipe: ", recipeText, typeof(recipeText));
   const lines = recipeText.trim().split("\n");
   let currentSection = "";
+  let isParsingNutrition = false;
 
   for (const line of lines) {
     if (line.startsWith("Title:")) {
@@ -95,6 +103,10 @@ export const parseRecipe = (recipeText: String): Recipe => {
     } else if (line.startsWith("Servings:")) {
       recipeData.servings = parseInt(line.split(": ")[1].trim(), 10);
       currentSection = "";
+    } else if (line.startsWith("Nutrition (per serving):")) {
+      recipeData.nutrition = {}; // Initialize nutrition object
+      isParsingNutrition = true; // Set the flag
+      currentSection = ""; // Clear general section
     } else if (line.startsWith("Ingredients:")) {
       recipeData.ingredients = [];
       currentSection = "ingredients";
@@ -104,6 +116,24 @@ export const parseRecipe = (recipeText: String): Recipe => {
     } else if (line.startsWith("Note:")) {
       recipeData.note = line.split(": ")[1].trim();
       currentSection = "";
+    } else if (isParsingNutrition && line.includes(":")) {
+      // This is a nutrition fact line
+      const parts = line.split(":");
+      if (parts.length === 2 && recipeData.nutrition) {
+        const nutrientName = parts[0].trim().toLowerCase(); // e.g., 'calories'
+        const valueString = parts[1].trim(); // e.g., '180 kcal' or '12 g'
+
+        // Extract the numeric part using parseFloat (handles "180 kcal" -> 180)
+        const numericValue = parseFloat(valueString);
+
+        if (!isNaN(numericValue)) {
+          // Store the numeric value under the lowercase nutrient name
+          recipeData.nutrition[nutrientName] = numericValue;
+        }
+        // Optional: Store the unit as well if needed
+        // const unit = valueString.split(' ')[1]; // e.g., 'kcal' or 'g'
+        // recipeData.nutrition[nutrientName] = { value: numericValue, unit: unit };
+      }
     } else if (currentSection === "ingredients" && line.startsWith("-")) {
       recipeData.ingredients.push(line.substring(2).trim());
     } else if (currentSection === "instructions" && line.match(/^\d+\./)) {
@@ -112,5 +142,12 @@ export const parseRecipe = (recipeText: String): Recipe => {
       );
     }
   }
+
+  // Ensure arrays/objects exist even if empty
+  if (!recipeData.tags) recipeData.tags = [];
+  if (!recipeData.nutrition) recipeData.nutrition = {};
+  if (!recipeData.ingredients) recipeData.ingredients = [];
+  if (!recipeData.instructions) recipeData.instructions = [];
+
   return recipeData as Recipe;
 };

@@ -57,6 +57,7 @@ export async function getRecipe(
     });
     return { data: response.text || "", error: null };
   } catch (err: any) {
+    console.log(err);
     return { error: err?.message || "An unknown error occurred!", data: null };
   }
 }

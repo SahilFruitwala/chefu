@@ -33,8 +33,6 @@ export default function IngredientInput({ form }: IngredientInputProps) {
 
   // Remove ingredient from the list
   const removeIngredient = (index: number) => {
-    console.clear();
-    console.log("Removing ingredient at index:", index);
     const newIngredients = [...ingredients];
     newIngredients.splice(index, 1);
     form.setValue("ingredients", newIngredients);

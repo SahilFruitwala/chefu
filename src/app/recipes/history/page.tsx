@@ -66,14 +66,14 @@ export default function HistoryPage() {
                     >
                       <span className="truncate">{recipe.title}</span>
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="icon"
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={() => {}}
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    </Button> */}
                   </div>
                 ))}
               </div>

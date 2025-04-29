@@ -7,6 +7,9 @@ export interface Recipe {
   time: string;
   difficulty: string;
   servings: number;
+  nutrition: {
+    [key: string]: string | number;
+  }
   ingredients: string[];
   instructions: string[];
   note?: string;
