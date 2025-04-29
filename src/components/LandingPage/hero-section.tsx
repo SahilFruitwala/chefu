@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "@/components/ui/motion";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -34,8 +35,10 @@ export function HeroSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button size="lg" className="group">
-                <span>Get started</span>
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <Link href="/signup" className="flex items-center">
+                  <span>Get started</span>
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
               <Button size="lg" variant="outline">
                 Watch demo
