@@ -34,7 +34,7 @@ export default function RecipeCard({
 }: {
   recipe: String | null;
   isLoading: boolean;
-  onSave: () => void;
+  onSave: null | (() => void);
   readOnly?: boolean;
 }) {
   if (isLoading) {

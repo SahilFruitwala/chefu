@@ -58,7 +58,7 @@ export function CtaSection() {
               </CardContent>
               <CardFooter>
                 <Button variant="outline" className="w-full">
-                  <Link href="/signup" className="flex items-center">
+                  <Link href="/sign-in" className="flex items-center">
                     Get started free
                   </Link>
                 </Button>
@@ -103,7 +103,7 @@ export function CtaSection() {
               </CardContent>
               <CardFooter>
                 <Button className="w-full">
-                  <Link href="/signup" className="flex items-center">
+                  <Link href="/sign-in" className="flex items-center">
                     <span>Get started</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -157,7 +157,7 @@ export function CtaSection() {
           </h3>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="group">
-              <Link href="/signup" className="flex items-center">
+              <Link href="/sign-in" className="flex items-center">
                 <span>Get started for free</span>
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>

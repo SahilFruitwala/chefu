@@ -11,7 +11,7 @@ import {
   SelectRecipe,
   recipes,
 } from "@/db/schema";
-import { count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -99,10 +99,33 @@ export async function createRecipe(recipe: String, userId: string) {
 
 export async function getRecipeForUser(
   userId: string
+): Promise<Array<{id: number; title: string}>> {
+  return db
+    .select({
+      id: recipes.id,
+      title: recipes.title,
+    })
+    .from(recipes)
+    .where(eq(recipes.userId, userId))
+    .orderBy(desc(recipes.createdAt));
+}
+
+export async function getRecipeById(
+  recipeId: number,
+  userId: string
 ): Promise<Array<SelectRecipe>> {
   return db
     .select()
     .from(recipes)
-    .where(eq(recipes.userId, userId))
-    .orderBy(desc(recipes.createdAt));
+    .where(and(eq(recipes.userId, userId), eq(recipes.id, recipeId)))
+    .limit(1);
+}
+
+export async function deleteRecipeById(
+  recipeId: number,
+  userId: string
+) {
+  return db.delete(recipes).where(
+    and(eq(recipes.userId, userId), eq(recipes.id, recipeId))
+  );
 }

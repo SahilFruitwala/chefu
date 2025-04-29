@@ -5,43 +5,51 @@ import { Recipe } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { History, Trash2 } from "lucide-react";
-import { getRecipeForUser } from "../actions";
+import { deleteRecipeById, getRecipeById, getRecipeForUser } from "../actions";
 import { useUser } from "@clerk/nextjs";
 import { SelectRecipe } from "@/db/schema";
+import {toast, Toaster} from 'sonner'
 
 export default function HistoryPage() {
-  const [recipes, setRecipes] = useState<SelectRecipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<SelectRecipe | null>(
-    null
-  );
+  const [recipes, setRecipes] = useState<Array<{ id: number; title: string }>>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<SelectRecipe | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const { user } = useUser();
   const {id: userId} = user!;
 
   useEffect(() => {
     const loadRecipes = async () => {
+      setIsLoading(true);
       const savedRecipes = await getRecipeForUser(userId);
       setRecipes(savedRecipes);
       if (savedRecipes.length > 0) {
-        setSelectedRecipe(savedRecipes[0]);
+        const recipe = await getRecipeById(savedRecipes[0].id, userId)
+        setSelectedRecipe(recipe[0]);
+        setIsLoading(false);
       }
     };
 
     loadRecipes();
   }, []);
 
-  const handleDeleteRecipe = (id: number) => {
-    // removeSavedRecipe(id);
-    // const updatedRecipes = recipes.filter((recipe) => recipe.id !== id);
-    // setRecipes(updatedRecipes);
+  const onRecipeSelect = async (recipeId: number) => {
+    setIsLoading(true);
+    const recipe = await getRecipeById(recipeId, userId);
+    setSelectedRecipe(recipe[0]);
+    setIsLoading(false);
+  }
+  
 
-    // if (selectedRecipe?.id === id) {
-    //   setSelectedRecipe(updatedRecipes[0] || null);
-    // }
-
-    // toast({
-    //   title: "Recipe Deleted",
-    //   description: "The recipe has been removed from your history.",
-    // });
+  const handleDeleteRecipe = async (recipeId: number) => {
+    setIsLoading(true);
+    await deleteRecipeById(recipeId, userId);
+    setRecipes(recipes.filter((recipe) => recipe.id !== recipeId))
+    if (selectedRecipe?.id === recipeId) {
+      setSelectedRecipe(null);
+    }
+    setIsLoading(false);
+    toast.info("The recipe has been removed from your history.");
   };
 
   return (
@@ -69,7 +77,7 @@ export default function HistoryPage() {
                         selectedRecipe?.id === recipe.id ? "default" : "ghost"
                       }
                       className={`w-full justify-start h-auto py-3 px-4 rounded-lg text-left font-medium transition-colors`}
-                      onClick={() => setSelectedRecipe(recipe)}
+                      onClick={() => onRecipeSelect(recipe.id)}
                     >
                       <span className="truncate">{recipe.title}</span>
                     </Button>
@@ -95,9 +103,9 @@ export default function HistoryPage() {
             <div>
               <RecipeCard
                 recipe={selectedRecipe?.recipe!}
-                isLoading={false}
+                isLoading={isLoading}
                 readOnly={true}
-                onSave={() => {}}
+                onSave={null}
               />
             </div>
           </div>
@@ -112,6 +120,7 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
+      <Toaster richColors closeButton />
     </main>
   );
 }
