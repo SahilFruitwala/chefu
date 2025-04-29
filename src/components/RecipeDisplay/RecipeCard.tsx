@@ -56,8 +56,6 @@ export default function RecipeCard({
   const extractedData = parseRecipe(recipe || "");
 
   const nutrition = extractedData.nutrition;
-  console.clear()
-  console.log(nutrition)
 
   return (
     <div id="print-area">
