@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "saved_recipes" integer DEFAULT 0 NOT NULL;

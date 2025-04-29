@@ -1,8 +1,17 @@
 "use server";
 
 import { GoogleGenAI } from "@google/genai";
-import generatRecipePrompt from "@/lib/prompt";
+import generatRecipePrompt, { parseRecipe } from "@/lib/prompt";
 import { FormValues } from "@/lib/types";
+import { db } from "@/db";
+import {
+  SelectUser,
+  users,
+  InsertRecipe,
+  SelectRecipe,
+  recipes,
+} from "@/db/schema";
+import { count, desc, eq } from "drizzle-orm";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -41,8 +50,53 @@ export async function getRecipe(
       model: "gemini-2.0-flash-lite",
       contents: recipePrompt,
     });
-    return { data: response.text, error: null };
-  } catch (err) {
-    return { error: err?.message || "An unknown error occurred", data: null };
+    return { data: response.text || "", error: null };
+  } catch (err: any) {
+    return { error: err?.message || "An unknown error occurred!", data: null };
   }
+}
+
+export async function addUser(email: string, id: string) {
+  const existingUser = await getUser(email);
+  if (existingUser.length === 0) {
+    await db.insert(users).values({ email: email, id: id });
+  }
+}
+
+export async function getUser(email: string): Promise<Array<SelectUser>> {
+  return db.select().from(users).where(eq(users.email, email)).limit(1);
+}
+
+export async function getRecipeCountForUser(userId: String): Promise<number> {
+  const recipeCount = await db
+    .select({ count: count() })
+    .from(recipes)
+    .where(eq(recipes.userId, userId));
+  return recipeCount[0].count;
+}
+
+export async function createRecipe(recipe: String, userId: string) {
+  const count = await getRecipeCountForUser(userId);
+  const extractedRecipe = parseRecipe(recipe);
+  const data = {
+    title: extractedRecipe.title,
+    tags: extractedRecipe.tags,
+    recipe: recipe,
+    userId: userId,
+  };
+  await db.insert(recipes).values(data);
+  await db
+    .update(users)
+    .set({ savedRecipes: count + 1 })
+    .where(eq(users.id, userId));
+}
+
+export async function getRecipeForUser(
+  userId: string
+): Promise<Array<SelectRecipe>> {
+  return db
+    .select()
+    .from(recipes)
+    .where(eq(recipes.userId, userId))
+    .orderBy(desc(recipes.createdAt));
 }

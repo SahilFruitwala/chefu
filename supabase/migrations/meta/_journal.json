@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1745891359019,
+      "tag": "0000_brainy_epoch",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1745892458732,
+      "tag": "0001_romantic_monster_badoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745894482506,
+      "tag": "0002_slim_christian_walker",
+      "breakpoints": true
+    }
+  ]
+}

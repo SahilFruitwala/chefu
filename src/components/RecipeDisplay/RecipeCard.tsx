@@ -16,8 +16,9 @@ import { Separator } from "@/components/ui/separator";
 import { Recipe } from "@/lib/types";
 import LoadingState from "@/components/RecipeDisplay/LoadingState";
 import EmptyState from "@/components/RecipeDisplay/EmptyState";
+import { parseRecipe } from "@/lib/prompt";
 
-export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | null, isLoading: boolean }) {
+export default function RecipeCard({ recipe, isLoading, onSave }: { recipe: String | null, isLoading: boolean, onSave: () => void }) {
   if (isLoading) {
     return (
       <Card className="w-full h-[1098px] flex flex-col shadow-md transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
@@ -34,18 +35,20 @@ export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | nul
     );
   }
 
+  const extractedData = parseRecipe(recipe || "");
+
   return (
     <div id="print-area">
       <Card className="w-full h-auto md:h-[1098px] flex flex-col transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
         <CardHeader className="pb-2 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-xl">{recipe.title}</CardTitle>
-              <CardDescription>{recipe.description}</CardDescription>
+              <CardTitle className="text-xl">{extractedData.title}</CardTitle>
+              <CardDescription>{extractedData.description}</CardDescription>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap mt-2">
-            {recipe.tags.map((tag, i) => (
+            {extractedData.tags.map((tag, i) => (
               <Badge key={i} variant="secondary">
                 {tag}
               </Badge>
@@ -57,15 +60,15 @@ export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | nul
           <div className="flex flex-wrap gap-4 text-sm mt-2">
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              <span>{recipe.time}</span>
+              <span>{extractedData.time}</span>
             </div>
             <div className="flex items-center gap-1">
               <Utensils className="h-4 w-4" />
-              <span>{recipe.difficulty}</span>
+              <span>{extractedData.difficulty}</span>
             </div>
             <div className="flex items-center gap-1">
               <Users className="h-4 w-4" />
-              <span>{recipe.servings} servings</span>
+              <span>{extractedData.servings} servings</span>
             </div>
           </div>
 
@@ -74,7 +77,7 @@ export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | nul
           <div>
             <h3 className="font-medium mb-2">Ingredients</h3>
             <ul className="space-y-1 text-sm">
-              {recipe.ingredients.map((ingredient, i) => (
+              {extractedData.ingredients.map((ingredient, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                   <span>{ingredient}</span>
@@ -86,7 +89,7 @@ export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | nul
           <div>
             <h3 className="font-medium mb-2">Instructions</h3>
             <ol className="space-y-2 text-sm list-decimal list-inside">
-              {recipe.instructions.map((step, i) => (
+              {extractedData.instructions.map((step, i) => (
                 <li key={i} className="pl-2">
                   {step}
                 </li>
@@ -96,9 +99,9 @@ export default function RecipeCard({ recipe, isLoading }: { recipe: Recipe | nul
         </CardContent>
 
         <CardFooter className="pt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
-          <p className="text-sm text-muted-foreground">{recipe.note}</p>
+          <p className="text-sm text-muted-foreground">{extractedData.note}</p>
           <div className="flex gap-2">
-            <Button onClick={() => alert("Recipe saved!")}>
+            <Button onClick={onSave}>
               <Save className="w-4 h-4 mr-1" />
               Save Recipe
             </Button>

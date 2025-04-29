@@ -18,22 +18,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
-}) {
+export function TeamSwitcher() {
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
-
-  if (!activeTeam) {
-    return null;
-  }
 
   return (
     <SidebarMenu>
@@ -46,7 +34,7 @@ export function TeamSwitcher({
             <UtensilsCrossed className="size-4" />
           </div>
           <div className="grid flex-1 text-left leading-tight text-lg">
-            <span className="truncate font-semibold">Chefu</span>
+            <Link className="truncate font-semibold" href="/recipes">Chefu</Link>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>

@@ -58,8 +58,9 @@ Generate the recipe using this structure and nothing else.
 `;
 };
 
-export const parseRecipe = (recipeText: string): Recipe => {
+export const parseRecipe = (recipeText: String): Recipe => {
   const recipeData: any = {};
+  console.log("Selected Recipe: ", recipeText, typeof(recipeText));
   const lines = recipeText.trim().split("\n");
   let currentSection = "";
 
