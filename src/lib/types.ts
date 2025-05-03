@@ -26,15 +26,41 @@ export interface FormValues {
   servings: string;
 }
 
+export interface MealPlanFormValues {
+  calorieTarget: string;
+  equipment: string[];
+  allergies: string[];
+  dietaryPreferences: string;
+  mealsPerDay: string;
+  mealPlanFor: string;
+  additionalNotes: string;
+  isBudgetFriendly: boolean;
+}
+
+export interface Meal {
+  name: string;
+  description: string;
+}
+
+export interface DayPlan {
+  breakfast?: Meal;
+  lunch?: Meal;
+  dinner?: Meal;
+}
+
+export interface MealPlan {
+  [day: string]: DayPlan;
+}
+
 export const EQUIPMENT_OPTIONS = [
   { id: "stove", label: "Stove/Range" },
   { id: "oven", label: "Oven" },
   { id: "microwave", label: "Microwave" },
   { id: "blender", label: "Blender" },
-  { id: "foodProcessor", label: "Food Processor" },
-  { id: "slowCooker", label: "Slow Cooker" },
-  { id: "instantPot", label: "Instant Pot" },
-  { id: "airFryer", label: "Air Fryer" },
+  { id: "food Processor", label: "Food Processor" },
+  { id: "slow Cooker", label: "Slow Cooker" },
+  { id: "instant Pot", label: "Instant Pot" },
+  { id: "air Fryer", label: "Air Fryer" },
   { id: "grill", label: "Grill" },
 ];
 
@@ -48,13 +74,13 @@ export const MEAL_TYPES = [
 ];
 
 export const DIETARY_RESTRICTIONS = [
-  { value: "none", label: "No Restrictions" },
+  { value: "no restrictions", label: "No Restrictions" },
   { value: "vegetarian", label: "Vegetarian" },
   { value: "vegan", label: "Vegan" },
-  { value: "glutenFree", label: "Gluten-Free" },
-  { value: "dairyFree", label: "Dairy-Free" },
-  { value: "nutFree", label: "Nut-Free" },
-  { value: "lowCarb", label: "Low Carb" },
+  { value: "gluten Free", label: "Gluten-Free" },
+  { value: "dairy Free", label: "Dairy-Free" },
+  { value: "nut Free", label: "Nut-Free" },
+  { value: "low Carb", label: "Low Carb" },
   { value: "keto", label: "Keto" },
 ];
 
@@ -80,4 +106,32 @@ export const CUISINE_TYPES = [
   { value: "american", label: "American" },
   { value: "indian", label: "Indian" },
   { value: "french", label: "French" },
+];
+
+export const CALORIES_TRAGET = [
+  { value: "less than 1500", label: "Less than 1500" },
+  { value: "1500-2000", label: "1500-2000" },
+  { value: "2000-2500", label: "2000-2500" },
+  { value: "more than 2500", label: "More than 2500" },
+];
+
+export const DIETARY_PREFERENCE = [
+  { value: "no preference", label: "No Preference" },
+  { value: "vegetarian", label: "Vegetarian" },
+  { value: "vegan", label: "Vegan" },
+  { value: "gluten Free", label: "Gluten-Free" },
+  { value: "dairy Free", label: "Dairy-Free" },
+  { value: "nut Free", label: "Nut-Free" },
+  { value: "low Carb", label: "Low Carb" },
+  { value: "keto", label: "Keto" },
+  { value: "halal", label: "Halal" },
+];
+
+
+export const MEAL_PLAN_DURATION = [
+  { value: "3 days", label: "3 Days" },
+  { value: "5 days", label: "5 Days" },
+  { value: "7 days", label: "7 Days" },
+  { value: "15 Days", label: "15 Days" },
+  { value: "20 Days", label: "20 Days" },
 ];

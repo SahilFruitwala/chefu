@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "saved_meal_plans" integer DEFAULT 0 NOT NULL;

@@ -22,6 +22,27 @@
       "when": 1745894482506,
       "tag": "0002_slim_christian_walker",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746275927154,
+      "tag": "0003_spicy_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746276519843,
+      "tag": "0004_quiet_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1746276970620,
+      "tag": "0005_crazy_baron_zemo",
+      "breakpoints": true
     }
   ]
 }

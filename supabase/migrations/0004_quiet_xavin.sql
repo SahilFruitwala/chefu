@@ -1,0 +1,1 @@
+ALTER TABLE "meal_plans" ALTER COLUMN "days" SET DATA TYPE integer USING "days"::integer;

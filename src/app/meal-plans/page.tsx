@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RecipeForm from "@/components/RecipeForm";
+import { MealPlanFormValues} from "@/lib/types";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import { generateRecipe } from "@/app/actions/gemini";
-import { createRecipe, getRecipeForUser } from "@/app/actions/recipes";
 import { addUser } from "@/app/actions/users";
-import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
+import { createMealPlan, getMealPlanForUser } from "@/app/actions/meal-plans";
 import { useUser } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
+import MealPlanForm from "@/components/MealPlanForm";
+import { generateMealPlan } from "@/app/actions/gemini";
+import MealPlansCard from "@/components/MealPlanDisplay";
 
-export default function RecipeHome() {
-  const [recipe, setRecipe] = useState<String | null>(null);
+export default function MealPlanHome() {
+  const [mealPlan, setMealPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({} as MealPlanFormValues);
 
   const searchParams = useSearchParams();
   const fromPath = searchParams.get("from");
@@ -25,27 +27,28 @@ export default function RecipeHome() {
   useEffect(() => {
     if (fromPath && fromPath === "sign-up" && emailAddress) {
       addUser(emailAddress, userId);
-      toast.success("You are in now!");
+      toast.success("You are in!");
     }
-    getRecipeForUser(userId)
+    getMealPlanForUser(userId);
   }, []);
 
-  const onGenerateRecipe = async (formData: any) => {
+  const onGenerateMealPlan = async (formData: MealPlanFormValues) => {
     setIsLoading(true);
-
+    setFormData(formData);
     try {
-      const response = await generateRecipe(formData);
+      const response = await generateMealPlan(formData);
       if (response.error) {
         toast.error("Failed to generate recipe. Please try again.");
         return;
       }
-      const recipeText = response.data!;
-      setRecipe(recipeText);
-      toast.success("Recipe Generated", {
-        description: "Your personalized recipe is ready!",
+      const mealPlanText = response.data!;
+      setMealPlan(mealPlanText);
+      toast.success("Meal Plan Generated", {
+        description: "Your personalized meal plan is ready!",
       });
     } catch (error) {
-      toast.error("Failed to generate recipe. Please try again.");
+      setFormData({} as MealPlanFormValues);
+      console.error("Error generating meal plan:", error);
     } finally {
       setIsLoading(false);
     }
@@ -53,20 +56,20 @@ export default function RecipeHome() {
 
   const handleOnSave = async () => {
     try {
-      await createRecipe(recipe!, userId); 
-      toast.success("Recipe saved successfully!")
+      await createMealPlan(mealPlan!, userId, formData);
+      toast.success("Meal plan saved successfully!");
     } catch (error) {
-      toast.error("Failed to save recipe. Please try again.");
+      toast.error("Failed to save meal plan. Please try again.");
     }
-  }
+  };
 
   return (
     <main className="flex min-h-screen justify-center items-center min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
         <div className="grid lg:grid-cols-2 gap-8 items-start">
-          <RecipeForm onSubmit={onGenerateRecipe} isLoading={isLoading} />
-          <RecipeCard
-            recipe={recipe}
+          <MealPlanForm onSubmit={onGenerateMealPlan} isLoading={isLoading} />
+          <MealPlansCard
+            mealPlan={mealPlan}
             isLoading={isLoading}
             onSave={handleOnSave}
           />

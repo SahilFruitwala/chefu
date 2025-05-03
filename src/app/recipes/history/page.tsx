@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Recipe } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { History, Trash2 } from "lucide-react";
-import { deleteRecipeById, getRecipeById, getRecipeForUser } from "../actions";
+import { deleteRecipeById, getRecipeById, getRecipeForUser } from "@/app/actions/recipes";
 import { useUser } from "@clerk/nextjs";
 import { SelectRecipe } from "@/db/schema";
 import {toast, Toaster} from 'sonner'

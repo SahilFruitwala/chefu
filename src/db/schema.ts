@@ -14,10 +14,12 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey(),
   email: varchar("email", { length: 256 }).notNull(),
   savedRecipes: integer("saved_recipes").default(0).notNull(),
+  savedMealPlans: integer("saved_meal_plans").default(0).notNull(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
   recipes: many(recipes),
+  mealPlans: many(mealPlans),
 }));
 
 
@@ -39,8 +41,28 @@ export const recipesRelations = relations(recipes, ({ one }) => ({
 }));
 
 
+export const mealPlans = pgTable("meal_plans", {
+  id: serial("id").primaryKey(),
+  days: integer().notNull(),
+  tags: json().notNull(),
+  mealPlan: text().notNull(),
+  createdAt: timestamp().defaultNow().notNull(),
+  userId: varchar("user_id").notNull(),
+});
+
+export const mealPlanRelations = relations(mealPlans, ({ one }) => ({
+  user: one(users, {
+    fields: [mealPlans.userId],
+    references: [users.id],
+  }),
+}));
+
+
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;
 
 export type InsertRecipe = typeof recipes.$inferInsert;
 export type SelectRecipe = typeof recipes.$inferSelect;
+
+export type InsertMealPlan = typeof mealPlans.$inferInsert;
+export type SelectMealPlan = typeof mealPlans.$inferSelect;

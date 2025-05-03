@@ -1,6 +1,6 @@
 // import { RecipeData } from "./types";
 
-import { Recipe } from "./types";
+import { DayPlan, MealPlan, Recipe } from "./types";
 
 export default function generatRecipePrompt(
   ingredients: Array<string>,
@@ -151,3 +151,101 @@ export const parseRecipe = (recipeText: String): Recipe => {
 
   return recipeData as Recipe;
 };
+
+export function generatMealPlanPrompt(
+  dietaryPreferences: string,
+  equipment: Array<string>,
+  allergies: Array<string>,
+  mealPlanFor: string,
+  isBudgetFriendly: boolean,
+  calorieTarget: string,
+) {
+  return `You are a meal planning assistant. Based on the input provided, generate a meal plan in the exact format specified and that is all I want. No extra text or notes. Do new dish for each meal. Do not consider leftover meals. There may not be leftovers.
+  Your response MUST follow this format exactly — no extra notes, no missing sections, and no creative formatting. This will be parsed by a program.
+
+
+
+### Input:
+
+- Dietary Preference: ${dietaryPreferences}
+
+- Calories per Day: ${calorieTarget}
+
+- Allergies/Restrictions: ${
+    allergies.length > 0 ? allergies.join(", ") : "None"
+  }
+
+- Equipment: ${equipment.join(", ")}
+
+- Budget Friendly: ${isBudgetFriendly ? "Yes" : "No"}
+
+- Meals per Day: 3
+
+
+
+### Output Format (strictly follow):
+
+Day 1:
+
+- Breakfast: [Meal name] - [Description]
+
+- Lunch: [Meal name] - [Description]
+
+- Dinner: [Meal name] - [Description]
+
+
+
+Day 2:
+
+- Breakfast: ...
+
+...
+
+
+
+Generate the plan for ${mealPlanFor}. Keep each meal nutritionally balanced and aligned with the goal and preferences.`;
+};
+
+
+export function parseMealPlan(mealPlanText: string): MealPlan {
+  const mealPlan: MealPlan = {};
+  const dayBlocks = mealPlanText.split(/Day \d+:\n/);
+
+  for (let i = 1; i < dayBlocks.length; i++) {
+    const dayNumber = i;
+    const day = `Day ${dayNumber}:`;
+    const dayPlan: DayPlan = {};
+    const lines = dayBlocks[i].trim().split("\n");
+
+    for (const line of lines) {
+      if (line.startsWith("- Breakfast:")) {
+        const parts = line.substring("- Breakfast:".length).trim().split(" - ");
+        if (parts.length === 2) {
+          dayPlan.breakfast = {
+            name: parts[0].trim(),
+            description: parts[1].trim(),
+          };
+        }
+      } else if (line.startsWith("- Lunch:")) {
+        const parts = line.substring("- Lunch:".length).trim().split(" - ");
+        if (parts.length === 2) {
+          dayPlan.lunch = {
+            name: parts[0].trim(),
+            description: parts[1].trim(),
+          };
+        }
+      } else if (line.startsWith("- Dinner:")) {
+        const parts = line.substring("- Dinner:".length).trim().split(" - ");
+        if (parts.length === 2) {
+          dayPlan.dinner = {
+            name: parts[0].trim(),
+            description: parts[1].trim(),
+          };
+        }
+      }
+    }
+    mealPlan[day] = dayPlan;
+  }
+
+  return mealPlan;
+}

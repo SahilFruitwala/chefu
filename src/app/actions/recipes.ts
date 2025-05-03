@@ -1,66 +1,14 @@
 "use server";
 
-import { GoogleGenAI } from "@google/genai";
-import generatRecipePrompt, { parseRecipe } from "@/lib/prompt";
-import { FormValues } from "@/lib/types";
+import { parseRecipe } from "@/lib/prompt";
 import { db } from "@/db";
 import {
   SelectUser,
   users,
-  InsertRecipe,
   SelectRecipe,
   recipes,
 } from "@/db/schema";
 import { and, count, desc, eq } from "drizzle-orm";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-export async function getRecipe(
-  formData: FormValues
-): Promise<{ data: string | null; error: string | null }> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error(
-      "GEMINI_API_KEY is not defined in the environment variables."
-    );
-  }
-  try {
-    const {
-      ingredients,
-      equipment,
-      dietaryRestrictions,
-      allergies,
-      mealType,
-      servings,
-      skillLevel,
-      cookingTime,
-    } = formData;
-
-    const recipePrompt = generatRecipePrompt(
-      ingredients,
-      equipment,
-      dietaryRestrictions,
-      allergies,
-      mealType,
-      servings,
-      skillLevel,
-      cookingTime
-    );
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-lite",
-      contents: recipePrompt,
-      config: {
-        systemInstruction:
-          "You are a professional chef. You know recipes of every kind, every type and of evry falvors.",
-        temperature: 0.5,
-      },
-    });
-    return { data: response.text || "", error: null };
-  } catch (err: any) {
-    console.log(err);
-    return { error: err?.message || "An unknown error occurred!", data: null };
-  }
-}
 
 export async function addUser(email: string, id: string) {
   const existingUser = await getUser(email);
