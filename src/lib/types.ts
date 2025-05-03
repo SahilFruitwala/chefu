@@ -53,7 +53,7 @@ export interface MealPlan {
 }
 
 export const EQUIPMENT_OPTIONS = [
-  { id: "stove", label: "Stove/Range" },
+  { id: "stove", label: "Stove" },
   { id: "oven", label: "Oven" },
   { id: "microwave", label: "Microwave" },
   { id: "blender", label: "Blender" },

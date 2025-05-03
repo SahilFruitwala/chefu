@@ -27,7 +27,7 @@ export default function RecipesLayout({
    }
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />

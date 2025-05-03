@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Loader2, ChevronDown, Utensils, Save } from "lucide-react";
-import { MealPlan } from "@/lib/types";
+import { ChevronDown, Utensils, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
@@ -20,10 +19,12 @@ export default function MealPlansCard({
   mealPlan,
   isLoading,
   onSave,
+  readOnly = false,
 }: {
   mealPlan: string | null;
   isLoading: boolean;
   onSave: null | (() => void);
+  readonly: boolean;
 }) {
   const [openDays, setOpenDays] = useState<string[]>([]);
 
@@ -33,23 +34,23 @@ export default function MealPlansCard({
     );
   };
 
-    if (!mealPlan && !isLoading) {
-      return (
-        <Card className="w-full h-auto flex flex-col transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
-          <EmptyState />
-        </Card>
-      );
-    }
+  if (!mealPlan && !isLoading) {
+    return (
+      <Card className="w-full h-auto flex flex-col transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
+        <EmptyState />
+      </Card>
+    );
+  }
 
-    if (isLoading) {
-      return (
-        <Card className="p-8">
-          <MealPlanLoadingState />
-        </Card>
-      );
-    }
+  if (isLoading) {
+    return (
+      <Card className="p-8">
+        <MealPlanLoadingState />
+      </Card>
+    );
+  }
 
-    const extractedData = parseMealPlan(mealPlan || "");
+  const extractedData = parseMealPlan(mealPlan || "");
   //   "Day 1:": {
   //     breakfast: {
   //       name: "Avocado Toast with Fried Egg",
@@ -237,10 +238,12 @@ export default function MealPlansCard({
                 Click on each day to view the meals.
               </p>
             </div>
-            <Button onClick={onSave}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Meal Plan
-            </Button>
+            {!readOnly && (
+              <Button onClick={onSave}>
+                <Save className="h-4 w-4 mr-2" />
+                Save Meal Plan
+              </Button>
+            )}
           </div>
         </Card>
         <div className="overflow-hidden no-scrollbar bg-card rounded-lg space-y-4 max-w-2xl mx-auto lg:max-h-[720px] lg:overflow-y-auto">
