@@ -27,7 +27,7 @@ export default function RecipeHome() {
       addUser(emailAddress, userId);
       toast.success("You are in now!");
     }
-    getRecipeForUser(userId)
+    getRecipeForUser(userId);
   }, []);
 
   const onGenerateRecipe = async (formData: any) => {
@@ -53,12 +53,12 @@ export default function RecipeHome() {
 
   const handleOnSave = async () => {
     try {
-      await createRecipe(recipe!, userId); 
-      toast.success("Recipe saved successfully!")
+      await createRecipe(recipe!, userId);
+      toast.success("Recipe saved successfully!");
     } catch (error) {
       toast.error("Failed to save recipe. Please try again.");
     }
-  }
+  };
 
   return (
     <main className="flex min-h-screen justify-center items-center min-h-screen bg-background">

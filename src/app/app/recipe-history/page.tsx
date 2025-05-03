@@ -4,18 +4,26 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { History, Trash2 } from "lucide-react";
-import { deleteRecipeById, getRecipeById, getRecipeForUser } from "@/app/actions/recipes";
+import {
+  deleteRecipeById,
+  getRecipeById,
+  getRecipeForUser,
+} from "@/app/actions/recipes";
 import { useUser } from "@clerk/nextjs";
 import { SelectRecipe } from "@/db/schema";
-import {toast, Toaster} from 'sonner'
+import { toast, Toaster } from "sonner";
 
 export default function HistoryPage() {
-  const [recipes, setRecipes] = useState<Array<{ id: number; title: string }>>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<SelectRecipe | null>(null);
+  const [recipes, setRecipes] = useState<Array<{ id: number; title: string }>>(
+    []
+  );
+  const [selectedRecipe, setSelectedRecipe] = useState<SelectRecipe | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { user } = useUser();
-  const {id: userId} = user!;
+  const { id: userId } = user!;
 
   useEffect(() => {
     const loadRecipes = async () => {
@@ -23,7 +31,7 @@ export default function HistoryPage() {
       const savedRecipes = await getRecipeForUser(userId);
       setRecipes(savedRecipes);
       if (savedRecipes.length > 0) {
-        const recipe = await getRecipeById(savedRecipes[0].id, userId)
+        const recipe = await getRecipeById(savedRecipes[0].id, userId);
         setSelectedRecipe(recipe[0]);
         setIsLoading(false);
       }
@@ -37,13 +45,12 @@ export default function HistoryPage() {
     const recipe = await getRecipeById(recipeId, userId);
     setSelectedRecipe(recipe[0]);
     setIsLoading(false);
-  }
-  
+  };
 
   const handleDeleteRecipe = async (recipeId: number) => {
     setIsLoading(true);
     await deleteRecipeById(recipeId, userId);
-    setRecipes(recipes.filter((recipe) => recipe.id !== recipeId))
+    setRecipes(recipes.filter((recipe) => recipe.id !== recipeId));
     if (selectedRecipe?.id === recipeId) {
       setSelectedRecipe(null);
     }

@@ -26,32 +26,32 @@ const data = {
   navMain: [
     {
       title: "Recipes",
-      url: "/recipes",
+      url: "/app/recipes",
       items: [
         {
           title: "Generate Recipes",
-          url: "/recipes",
+          url: "/app/recipes",
           icons: <CookingPot className="size-4" />,
         },
         {
           title: "Saved Reciepes",
-          url: "/recipes/history",
+          url: "/app/recipe-history",
           icons: <BookMarked className="size-4" />,
         },
       ],
     },
     {
       title: "Meal Plans",
-      url: "/meal-plans",
+      url: "/app/meal-plans",
       items: [
         {
           title: "Generate Meal Plans",
-          url: "/meal-plans",
+          url: "/app/meal-plans",
           icons: <NotebookTabs className="size-4" />,
         },
         {
           title: "Saved Meal Plans",
-          url: "/meal-plans/history",
+          url: "/app/meal-plan-history",
           icons: <BookMarked className="size-4" />,
         },
       ],

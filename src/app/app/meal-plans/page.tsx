@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MealPlanFormValues} from "@/lib/types";
+import { MealPlanFormValues } from "@/lib/types";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { addUser } from "@/app/actions/users";

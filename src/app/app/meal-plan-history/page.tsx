@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { History, Trash2 } from "lucide-react";
-import {
-  deleteRecipeById,
-  getRecipeById,
-  getRecipeForUser,
-} from "@/app/actions/recipes";
 import { useUser } from "@clerk/nextjs";
-import { SelectMealPlan, SelectRecipe } from "@/db/schema";
+import { SelectMealPlan } from "@/db/schema";
 import { toast, Toaster } from "sonner";
-import { deleteMealPlanById, getMealPlanById, getMealPlanForUser } from "@/app/actions/meal-plans";
+import {
+  deleteMealPlanById,
+  getMealPlanById,
+  getMealPlanForUser,
+} from "@/app/actions/meal-plans";
 import MealPlansCard from "@/components/MealPlanDisplay";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
