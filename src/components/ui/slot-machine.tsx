@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -51,7 +51,18 @@ export function SlotMachine({
         clearInterval(spinIntervalRef.current);
       }
 
-      const finalOption = options[Math.floor(Math.random() * options.length)];
+      // Ensure a different option is selected if possible
+      let finalOption: string;
+      if (options.length === 1) {
+        finalOption = options[0];
+      } else {
+        let prevOption = displayedOptions[0];
+        let idx: number;
+        do {
+          idx = crypto.getRandomValues(new Uint32Array(1))[0] % options.length;
+          finalOption = options[idx];
+        } while (finalOption === prevOption);
+      }
       setDisplayedOptions([finalOption]);
       setSelectedOption(finalOption);
       setIsSpinning(false);
@@ -69,7 +80,8 @@ export function SlotMachine({
 
   const slotStyles = {
     default: "bg-card border-4 border-primary rounded-xl p-6 shadow-lg",
-    casino: "bg-black border-8 border-yellow-500 rounded-2xl p-8 shadow-2xl text-white",
+    casino:
+      "bg-black border-8 border-yellow-500 rounded-2xl p-8 shadow-2xl text-white",
     minimal: "bg-background border border-border rounded-md p-4",
   };
 
@@ -90,7 +102,7 @@ export function SlotMachine({
               animate="center"
               exit="exit"
               variants={variants}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
             >
               {option}
             </motion.div>

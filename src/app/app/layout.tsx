@@ -23,7 +23,8 @@ export default function RecipesLayout({
   }
 
    if (!isSignedIn) {
-     redirect("/sign-in");
+     redirect("/waitlist");
+    //  redirect("/sign-in");
    }
 
   return (
