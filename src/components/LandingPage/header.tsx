@@ -97,12 +97,15 @@ export function Header() {
           <ThemeSwitcher />
           <div className="hidden md:flex gap-2">
             <SignedOut>
-              <Button variant="outline" size="sm">
+              <Button size="sm">
+                <Link href="/waitlist">Join Private Beta</Link>
+              </Button>
+              {/* <Button variant="outline" size="sm">
                 <Link href="/sign-in">Sign in</Link>
               </Button>
               <Button size="sm">
                 <Link href="/sign-up">Sign up</Link>
-              </Button>
+              </Button> */}
             </SignedOut>
             <SignedIn>
               <UserButton />
@@ -142,12 +145,12 @@ export function Header() {
                   Testimonials
                 </Link> */}
                 <SheetClose asChild>
-                <Link
-                  href="#pricing"
-                  className="text-base font-medium hover:text-primary/80 transition-colors"
-                >
-                  Pricing
-                </Link>
+                  <Link
+                    href="#pricing"
+                    className="text-base font-medium hover:text-primary/80 transition-colors"
+                  >
+                    Pricing
+                  </Link>
                 </SheetClose>
                 <div className="flex flex-col gap-2 mt-4">
                   <SignedIn>
@@ -155,11 +158,14 @@ export function Header() {
                   </SignedIn>
                   <SignedOut>
                     <Button variant="outline" asChild>
+                      <Link href="/waitlist">Join Private Beta</Link>
+                    </Button>
+                    {/* <Button variant="outline" asChild>
                       <Link href="/sign-in">Log in</Link>
                     </Button>
                     <Button>
                       <Link href="/sign-up">Sign up</Link>
-                    </Button>
+                    </Button> */}
                   </SignedOut>
                 </div>
               </nav>

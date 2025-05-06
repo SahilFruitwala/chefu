@@ -24,9 +24,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider waitlistUrl="/waitlist">
       <html>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           <PostHogProvider>
             <ThemeProvider attribute="class" defaultTheme="light">
               {children}
