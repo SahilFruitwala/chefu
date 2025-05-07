@@ -24,7 +24,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider waitlistUrl="/waitlist">
+    <ClerkProvider>
       <html>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}

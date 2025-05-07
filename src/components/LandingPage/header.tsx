@@ -97,15 +97,12 @@ export function Header() {
           <ThemeSwitcher />
           <div className="hidden md:flex gap-2">
             <SignedOut>
-              <Button size="sm">
-                <Link href="/waitlist">Join Private Beta</Link>
-              </Button>
-              {/* <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm">
                 <Link href="/sign-in">Sign in</Link>
               </Button>
               <Button size="sm">
                 <Link href="/sign-up">Sign up</Link>
-              </Button> */}
+              </Button>
             </SignedOut>
             <SignedIn>
               <UserButton />
@@ -158,14 +155,11 @@ export function Header() {
                   </SignedIn>
                   <SignedOut>
                     <Button variant="outline" asChild>
-                      <Link href="/waitlist">Join Private Beta</Link>
-                    </Button>
-                    {/* <Button variant="outline" asChild>
                       <Link href="/sign-in">Log in</Link>
                     </Button>
                     <Button>
                       <Link href="/sign-up">Sign up</Link>
-                    </Button> */}
+                    </Button>
                   </SignedOut>
                 </div>
               </nav>
