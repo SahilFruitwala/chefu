@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import PartyPopperModal from "../PartyPopperModal";
 
 export function CtaSection() {
   return (
@@ -57,11 +58,12 @@ export function CtaSection() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">
+                <PartyPopperModal variant="outline" />
+                {/* <Button variant="outline" className="w-full">
                   <Link href="/sign-in" className="flex items-center">
                     Get started free
                   </Link>
-                </Button>
+                </Button> */}
               </CardFooter>
             </Card>
           </motion.div>
@@ -102,12 +104,13 @@ export function CtaSection() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">
+                <PartyPopperModal variant="default"/>
+                {/* <Button className="w-full">
                   <Link href="/sign-in" className="flex items-center">
                     <span>Get started</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
-                </Button>
+                </Button> */}
               </CardFooter>
             </Card>
           </motion.div>
