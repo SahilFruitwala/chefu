@@ -9,7 +9,7 @@ import { createRecipe, getRecipeForUser } from "@/app/actions/recipes";
 import { addUser } from "@/app/actions/users";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { useUser } from "@clerk/nextjs";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function RecipeHome() {
   const [recipe, setRecipe] = useState<String | null>(null);
@@ -17,6 +17,8 @@ export default function RecipeHome() {
 
   const searchParams = useSearchParams();
   const fromPath = searchParams.get("from");
+  const router = useRouter();
+  const pathname = usePathname();
 
   const { user } = useUser();
   const { id: userId, primaryEmailAddress } = user!;
@@ -26,6 +28,7 @@ export default function RecipeHome() {
     if (fromPath && fromPath === "sign-up" && emailAddress) {
       addUser(emailAddress, userId);
       toast.success("You are in now!");
+      router.replace(pathname);
     }
     getRecipeForUser(userId);
   }, []);
