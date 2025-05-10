@@ -2,30 +2,28 @@
 
 import { parseRecipe } from "@/lib/prompt";
 import { db } from "@/db";
-import {
-  SelectUser,
-  users,
-  SelectRecipe,
-  recipes,
-} from "@/db/schema";
-import { and, count, desc, eq } from "drizzle-orm";
+import { SelectRecipe, recipes } from "@/db/schema";
+import { and, desc, eq } from "drizzle-orm";
 import { getFeatureCountAndLimit } from "./counter";
 import { Features } from "@/lib/types";
+import { currentUser } from "@clerk/nextjs/server";
+import { logger } from "@/lib/logger";
 
-export async function addUser(email: string, id: string) {
-  const existingUser = await getUser(email);
-  if (existingUser.length === 0) {
-    await db.insert(users).values({ email: email, id: id });
-  }
-}
-
-export async function getUser(email: string): Promise<Array<SelectUser>> {
-  return db.select().from(users).where(eq(users.email, email)).limit(1);
-}
+const log = logger.child({ module: "recipe" });
 
 export async function createRecipe(recipe: String, userId: string) {
-  const { usageCount, featureLimit} = await getFeatureCountAndLimit(userId, Features.SAVE_RECIPE);
+  const user = await currentUser();
+  if (!user) {
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
+  }
+
+  const { usageCount, featureLimit } = await getFeatureCountAndLimit(
+    user.id,
+    Features.SAVE_RECIPE
+  );
   if (usageCount >= featureLimit) {
+    logger.error("'%s' has reached the limit for recipe save", user.id);
     throw new Error("You have used all your max usage.");
   }
 
@@ -34,14 +32,20 @@ export async function createRecipe(recipe: String, userId: string) {
     title: extractedRecipe.title,
     tags: extractedRecipe.tags,
     recipe: recipe,
-    userId: userId,
+    userId: user.id,
   };
   await db.insert(recipes).values(data);
+  logger.info("'%s' has created a meal plan", user.id);
 }
 
 export async function getRecipeForUser(
   userId: string
-): Promise<Array<{id: number; title: string}>> {
+): Promise<Array<{ id: number; title: string }>> {
+  const user = await currentUser();
+  if (!user) {
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
+  }
   return db
     .select({
       id: recipes.id,
@@ -56,6 +60,11 @@ export async function getRecipeById(
   recipeId: number,
   userId: string
 ): Promise<Array<SelectRecipe>> {
+  const user = await currentUser();
+  if (!user) {
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
+  }
   return db
     .select()
     .from(recipes)
@@ -63,11 +72,13 @@ export async function getRecipeById(
     .limit(1);
 }
 
-export async function deleteRecipeById(
-  recipeId: number,
-  userId: string
-) {
-  return db.delete(recipes).where(
-    and(eq(recipes.userId, userId), eq(recipes.id, recipeId))
-  );
+export async function deleteRecipeById(recipeId: number, userId: string) {
+  const user = await currentUser();
+  if (!user) {
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
+  }
+  return db
+    .delete(recipes)
+    .where(and(eq(recipes.userId, userId), eq(recipes.id, recipeId)));
 }

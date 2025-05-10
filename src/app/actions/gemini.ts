@@ -22,8 +22,8 @@ export async function generateRecipe(
   }
   const user = await currentUser();
   if(!user) {
-    log.error("User not found");
-    throw new Error("User not found");
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
@@ -88,8 +88,8 @@ export async function generateMealPlan(
 
   const user = await currentUser();
   if (!user) {
-    log.error("User not found");
-    throw new Error("User not found");
+    log.error("User is not authorized");
+    throw new Error("User is not authorized");
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
