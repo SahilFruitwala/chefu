@@ -10,7 +10,7 @@ CREATE TABLE "features" (
 CREATE TABLE "usage" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" varchar NOT NULL,
-	"feature_id" varchar NOT NULL,
+	"feature_id" integer NOT NULL,
 	"usage_count" integer DEFAULT 0 NOT NULL,
 	"period_start" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "usage_user_id_feature_id_period_start_unique" UNIQUE("user_id","feature_id","period_start")

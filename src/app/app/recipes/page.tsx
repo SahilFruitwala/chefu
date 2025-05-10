@@ -95,6 +95,8 @@ export default function RecipeHome() {
       }
       toast.success("Recipe saved successfully!");
     } catch (error) {
+      console.log("Error saving recipe:", error);
+      console.log("Error saving recipe:", error.message);
       toast.error(error.message);
     }
   };
