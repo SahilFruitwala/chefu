@@ -5,12 +5,8 @@ import { DemoSection } from "@/components/LandingPage/demo-section";
 import { TestimonialsSection } from "@/components/LandingPage/testimonials-section";
 import { CtaSection } from "@/components/LandingPage/cta-section";
 import { Footer } from "@/components/LandingPage/footer";
-import { PricingTable } from "@clerk/nextjs";
-import { useTheme } from "next-themes";
-import { dark, simple } from "@clerk/themes";
 
 export default function LandingPage() {
-  const { theme, setTheme } = useTheme();
   return (
     <main className="container mx-auto min-h-screen bg-background px-4">
       <Header />
@@ -18,11 +14,6 @@ export default function LandingPage() {
       <FeaturesSection />
       <DemoSection />
       {/* <TestimonialsSection /> */}
-      {/* <PricingTable
-        appearance={{
-          baseTheme: theme === "light" ? simple : dark,
-        }}
-      /> */}
       <CtaSection />
       <Footer />
     </main>

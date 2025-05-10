@@ -2,19 +2,14 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { motion } from "@/components/ui/motion";
-import { ArrowRight, Check } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import PartyPopperModal from "../PartyPopperModal";
+import { PricingTable } from "@clerk/nextjs";
+import { useTheme } from "next-themes";
+import { dark, simple } from "@clerk/themes";
 
 export function CtaSection() {
+  const { theme, setTheme } = useTheme();
   return (
     <section id="pricing" className="py-20">
       <div>
@@ -28,7 +23,12 @@ export function CtaSection() {
         </div>
 
         <div className="flex flex-col md:flex-row sm:space-x-4 space-y-4 max-w-5xl mx-auto items-center justify-center">
-          <motion.div
+          <PricingTable
+            appearance={{
+              baseTheme: theme === "light" ? simple : dark,
+            }}
+          />
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -58,17 +58,16 @@ export function CtaSection() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <PartyPopperModal variant="outline" />
-                {/* <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full">
                   <Link href="/sign-in" className="flex items-center">
                     Get started free
                   </Link>
-                </Button> */}
+                </Button>
               </CardFooter>
             </Card>
-          </motion.div>
+          </motion.div> */}
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -104,50 +103,11 @@ export function CtaSection() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <PartyPopperModal variant="default"/>
-                {/* <Button className="w-full">
+                <Button className="w-full">
                   <Link href="/sign-in" className="flex items-center">
                     <span>Get started</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
-                </Button> */}
-              </CardFooter>
-            </Card>
-          </motion.div>
-
-          {/* <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card className="border-border/50 h-full flex flex-col">
-              <CardHeader>
-                <CardTitle>Family</CardTitle>
-                <div className="mt-4">
-                  <span className="text-3xl font-bold">$19.99</span>
-                  <span className="text-muted-foreground ml-1">/month</span>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <ul className="space-y-2">
-                  {[
-                    "Everything in Pro",
-                    "Up to 5 family accounts",
-                    "Meal planning features",
-                    "Automatic shopping lists",
-                    "Personalized recommendations",
-                    "Priority support",
-                  ].map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Get started
                 </Button>
               </CardFooter>
             </Card>
