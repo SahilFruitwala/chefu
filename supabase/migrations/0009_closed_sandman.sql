@@ -1,0 +1,1 @@
+ALTER TABLE "usage" ALTER COLUMN "feature_id" SET DATA TYPE integer;

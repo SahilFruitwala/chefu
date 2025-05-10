@@ -13,6 +13,7 @@ export interface Recipe {
   ingredients: string[];
   instructions: string[];
   note?: string;
+  error?: string;
 }
 
 export interface FormValues {
@@ -135,3 +136,15 @@ export const MEAL_PLAN_DURATION = [
   { value: "15 Days", label: "15 Days" },
   { value: "20 Days", label: "20 Days" },
 ];
+
+export enum SubscriptionPlan {
+  BASIC = "free",
+  PREMIUM = "premium",
+}
+
+export enum Features {
+  RECIPE = "recipe",
+  SAVE_RECIPE = "save_recipe",
+  MEAL_PLAN = "meal_plan",
+  SAVE_MEAL_PLAN = "save_meal_plan",
+}

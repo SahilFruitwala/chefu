@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { getFeatureCountAndLimit } from "../actions/counter";
 
 export default function RecipesLayout({
   children,

@@ -10,6 +10,12 @@ import { addUser } from "@/app/actions/users";
 import RecipeCard from "@/components/RecipeDisplay/RecipeCard";
 import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import {
+  getFeatureCountAndLimit,
+  updateFeatureCount,
+} from "@/app/actions/counter";
+import { useRecipeStore } from "@/stores/counter-store";
+import { Features } from "@/lib/types";
 
 export default function RecipeHome() {
   const [recipe, setRecipe] = useState<String | null>(null);
@@ -24,42 +30,72 @@ export default function RecipeHome() {
   const { id: userId, primaryEmailAddress } = user!;
   const emailAddress = primaryEmailAddress?.emailAddress!;
 
+  const { count, maxUsageCount, increaseCount, setCounter } = useRecipeStore();
+
+  const setCounterData = async () => {
+    const { usageCount, featureLimit } = await getFeatureCountAndLimit(
+      userId,
+      Features.RECIPE
+    );
+    setCounter({
+      currentCount: usageCount,
+      maxUsageCount: featureLimit,
+    });
+  };
+
   useEffect(() => {
     if (fromPath && fromPath === "sign-up" && emailAddress) {
       addUser(emailAddress, userId);
       toast.success("You are in now!");
       router.replace(pathname);
     }
-    getRecipeForUser(userId);
+    if (count === null) {
+      setCounterData();
+    }
   }, []);
 
   const onGenerateRecipe = async (formData: any) => {
-    setIsLoading(true);
-
-    try {
-      const response = await generateRecipe(formData);
-      if (response.error) {
-        toast.error("Failed to generate recipe. Please try again.");
-        return;
+    if (count! >= maxUsageCount) {
+      toast.error("You have used all your max usage for today.");
+    } else {
+      setIsLoading(true);
+      try {
+        const response = await generateRecipe(formData);
+        if (response.error) {
+          toast.error("Failed to generate recipe. Please try again.");
+          return;
+        }
+        const recipeText = response.data!;
+        setRecipe(recipeText);
+        try {
+          updateFeatureCount(userId, Features.RECIPE);
+          increaseCount();
+        } catch (error) {
+          console.log("Error updating feature count:", error);
+        }
+        !recipeText.includes("Error:") && toast.success("Recipe Generated", {
+          description: "Your personalized recipe is ready!",
+        });
+      } catch (error) {
+        setRecipe(null);
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
       }
-      const recipeText = response.data!;
-      setRecipe(recipeText);
-      toast.success("Recipe Generated", {
-        description: "Your personalized recipe is ready!",
-      });
-    } catch (error) {
-      toast.error("Failed to generate recipe. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleOnSave = async () => {
     try {
       await createRecipe(recipe!, userId);
+      try {
+        updateFeatureCount(userId, Features.SAVE_RECIPE);
+      } catch (error) {
+        console.log("Error updating feature count:", error);
+      }
       toast.success("Recipe saved successfully!");
     } catch (error) {
-      toast.error("Failed to save recipe. Please try again.");
+      toast.error(error.message);
     }
   };
 

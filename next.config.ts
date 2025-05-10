@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  serverExternalPackages: ["pino", "pino-pretty"],
   images: { unoptimized: true },
   eslint: {
     ignoreDuringBuilds: true,

@@ -1,11 +1,13 @@
 "use server";
 
 import { GoogleGenAI } from "@google/genai";
-import generatRecipePrompt, {
-  generatMealPlanPrompt,
-  parseMealPlan,
-} from "@/lib/prompt";
-import { FormValues, MealPlanFormValues } from "@/lib/types";
+import generatRecipePrompt, { generatMealPlanPrompt } from "@/lib/prompt";
+import { Features, FormValues, MealPlanFormValues } from "@/lib/types";
+import { getFeatureCountAndLimit } from "./counter";
+import { currentUser } from "@clerk/nextjs/server";
+import { logger } from "@/lib/logger";
+
+const log = logger.child({ module: "gemini" });
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -13,10 +15,27 @@ export async function generateRecipe(
   formData: FormValues
 ): Promise<{ data: string | null; error: string | null }> {
   if (!process.env.GEMINI_API_KEY) {
+    log.error("GEMINI_API_KEY is not defined in the environment variables.");
     throw new Error(
       "GEMINI_API_KEY is not defined in the environment variables."
     );
   }
+  const user = await currentUser();
+  if(!user) {
+    log.error("User not found");
+    throw new Error("User not found");
+  }
+
+  const { usageCount, featureLimit } = await getFeatureCountAndLimit(
+    user.id,
+    Features.RECIPE
+  );
+
+  if(usageCount >= featureLimit) {
+    logger.error("'%s' has reached the limit for recipe generation", user.id);
+    throw new Error("You have used all your max usage for today.");
+  }
+
   try {
     const {
       ingredients,
@@ -41,7 +60,7 @@ export async function generateRecipe(
     );
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-lite",
+      model: process.env.GEMINI_MODEL || "gemini-2.0-flash-lite",
       contents: recipePrompt,
       config: {
         systemInstruction:
@@ -49,9 +68,10 @@ export async function generateRecipe(
         temperature: 0.6,
       },
     });
+    logger.info("'%s' has used the recipe generation feature", user.id);
     return { data: response.text || "", error: null };
   } catch (err: any) {
-    console.log(err);
+    logger.error("Error generating recipe: %s", err);
     return { error: err?.message || "An unknown error occurred!", data: null };
   }
 }
@@ -60,10 +80,28 @@ export async function generateMealPlan(
   formData: MealPlanFormValues
 ): Promise<{ data: string | null; error: string | null }> {
   if (!process.env.GEMINI_API_KEY) {
+    log.error("GEMINI_API_KEY is not defined in the environment variables.");
     throw new Error(
       "GEMINI_API_KEY is not defined in the environment variables."
     );
   }
+
+  const user = await currentUser();
+  if (!user) {
+    log.error("User not found");
+    throw new Error("User not found");
+  }
+
+  const { usageCount, featureLimit } = await getFeatureCountAndLimit(
+    user.id,
+    Features.MEAL_PLAN
+  );
+
+  if (usageCount >= featureLimit) {
+    logger.error("'%s' has reached the limit for meal plan generation", user.id);
+    throw new Error("You have used all your max usage.");
+  }
+
   try {
     const {
       calorieTarget,
@@ -84,7 +122,7 @@ export async function generateMealPlan(
     );
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-lite",
+      model: process.env.GEMINI_MODEL || "gemini-2.0-flash-lite",
       contents: mealPlanPrompt,
       config: {
         systemInstruction:
@@ -92,9 +130,10 @@ export async function generateMealPlan(
         temperature: 0.6,
       },
     });
+    logger.info("'%s' has used the meal plan generation feature", user.id);
     return { data: response.text || "", error: null };
   } catch (err: any) {
-    console.log(err);
+    logger.error("Error generating recipe: %s", err);
     return { error: err?.message || "An unknown error occurred!", data: null };
   }
 }

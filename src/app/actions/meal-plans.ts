@@ -8,19 +8,17 @@ import {
   SelectMealPlan,
 } from "@/db/schema";
 import { and, count, desc, eq } from "drizzle-orm";
-import { MealPlanFormValues } from "@/lib/types";
+import { Features, MealPlanFormValues } from "@/lib/types";
+import { getFeatureCountAndLimit } from "./counter";
 
 
-export async function getMealPlanCountForUser(userId: string): Promise<number> {
-  const mealPlansCount = await db
-    .select({ count: count() })
-    .from(mealPlans)
-    .where(eq(mealPlans.userId, userId));
-  return mealPlansCount[0].count;
-}
 
 export async function createMealPlan(mealPlan: string, userId: string, formData: MealPlanFormValues) {
-  const count = await getMealPlanCountForUser(userId);
+  const { usageCount, featureLimit} = await getFeatureCountAndLimit(userId, Features.SAVE_MEAL_PLAN);
+    if (usageCount >= featureLimit) {
+      throw new Error("You have used all your max usage.");
+    }
+
   const extractedRecipe = parseMealPlan(mealPlan);
   const tags = [formData.dietaryPreferences, formData.calorieTarget];
   const data = {
@@ -30,10 +28,6 @@ export async function createMealPlan(mealPlan: string, userId: string, formData:
     userId: userId,
   };
   await db.insert(mealPlans).values(data);
-  await db
-    .update(users)
-    .set({ savedMealPlans: count + 1 })
-    .where(eq(users.id, userId));
 }
 
 export async function getMealPlanForUser(

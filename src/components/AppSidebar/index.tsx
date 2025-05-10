@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { BookMarked, CookingPot, Minus, NotebookTabs, Plus, UtensilsCrossed } from "lucide-react";
+import { BookMarked, ChevronRight, CookingPot, Minus, NotebookTabs, Plus, UtensilsCrossed } from "lucide-react";
 
 import { NavUser } from "@/components/AppSidebar/nav-user";
 import {
@@ -27,6 +27,7 @@ const data = {
     {
       title: "Recipes",
       url: "/app/recipes",
+      icons: <CookingPot className="size-4" />,
       items: [
         {
           title: "Generate Recipes",
@@ -43,6 +44,7 @@ const data = {
     {
       title: "Meal Plans",
       url: "/app/meal-plans",
+      icons: <NotebookTabs className="size-4" />,
       items: [
         {
           title: "Generate Meal Plans",
@@ -61,14 +63,13 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  console.log(pathname);
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/recipes">
+              <Link href="/app/recipes">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <UtensilsCrossed className="size-4" />
                 </div>
@@ -92,9 +93,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={item.title}>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton>
+                      <Link href={item.url}>{item.icons}</Link>
                       {item.title}&nbsp;
-                      <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                      <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   {item.items?.length ? (

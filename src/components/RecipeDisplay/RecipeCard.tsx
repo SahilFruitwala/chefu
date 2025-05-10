@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import LoadingState from "@/components/RecipeDisplay/LoadingState";
 import EmptyState from "@/components/RecipeDisplay/EmptyState";
 import { parseRecipe } from "@/lib/prompt";
+import { toast } from "sonner";
 
 export default function RecipeCard({
   recipe,
@@ -54,6 +55,15 @@ export default function RecipeCard({
   }
 
   const extractedData = parseRecipe(recipe || "");
+
+  if(extractedData && extractedData.error !== '') {
+    toast.error(extractedData.error);
+    return (
+      <Card className="w-full h-[1098px] flex flex-col shadow-md transition-all duration-300 shadow-lg hover:shadow-md hover:shadow-amber-400">
+        <EmptyState />
+      </Card>
+    );
+  }
 
   const nutrition = extractedData.nutrition;
 

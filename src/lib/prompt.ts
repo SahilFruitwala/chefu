@@ -14,13 +14,21 @@ export default function generatRecipePrompt(
 ) {
   return `You are a recipe generator.
 
-Based on the user's input, generate a complete recipe using the structure below. Your response MUST follow this format exactly — no extra notes, no missing sections, and no creative formatting. This will be parsed by a program. And remeber this is important do not use any extra ingredient apart from what is mentioned.
+Based on the user's input, generate a complete recipe using the structure below. Your response MUST follow this format exactly — no extra notes, no missing sections, and no creative formatting. This will be parsed by a program.
 
-If the ingredients include any meat, poultry, seafood, or egg, create a non-vegetarian recipe.
-If the ingredients are all plant-based or dairy, create a vegetarian recipe and do not add any non-vegetarian items.
-Do not assume or add ingredients not in the list unless they are basic pantry staples like salt, oil, or water.
+IMPORTANT:
+- Only use ingredients provided in the input. Do NOT add extra ingredients unless they are essential pantry staples (e.g., salt, oil, water).
+- Validate each ingredient. If any are clearly invalid or out of context, exclude them.
+- Always attempt to generate a recipe using the remaining valid ingredients.
+- Only return an error if the remaining valid ingredients make it completely impossible to create any reasonable dish aligned with the user's inputs.
 
-Respond in plain text using this exact structure:
+If you must return an error, use the following format exactly:
+
+  Error: <error message> with list of issues.
+
+- Respect dietary context: If any meat, poultry, seafood, or egg is present, it is non-vegetarian. If only plant-based or dairy, it is vegetarian. Do NOT mix.
+
+Respond in plain text using the following structure:
 
 Title: <Recipe Title>  
 Description: <One-line description of the dish>  
@@ -73,9 +81,13 @@ export const parseRecipe = (recipeText: String): Recipe => {
   const lines = recipeText.trim().split("\n");
   let currentSection = "";
   let isParsingNutrition = false;
+  recipeData.error = ""
 
   for (const line of lines) {
-    if (line.startsWith("Title:")) {
+    if (line.startsWith("Error:")) {
+      recipeData.error = line.split(": ")[1].trim();
+      currentSection = "";
+    } else if (line.startsWith("Title:")) {
       recipeData.title = line.split(": ")[1].trim();
       currentSection = "";
     } else if (line.startsWith("Description:")) {

@@ -25,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html>
+      <html suppressHydrationWarning lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

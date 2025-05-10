@@ -9,6 +9,8 @@ import {
   recipes,
 } from "@/db/schema";
 import { and, count, desc, eq } from "drizzle-orm";
+import { getFeatureCountAndLimit } from "./counter";
+import { Features } from "@/lib/types";
 
 export async function addUser(email: string, id: string) {
   const existingUser = await getUser(email);
@@ -21,16 +23,12 @@ export async function getUser(email: string): Promise<Array<SelectUser>> {
   return db.select().from(users).where(eq(users.email, email)).limit(1);
 }
 
-export async function getRecipeCountForUser(userId: string): Promise<number> {
-  const recipeCount = await db
-    .select({ count: count() })
-    .from(recipes)
-    .where(eq(recipes.userId, userId));
-  return recipeCount[0].count;
-}
-
 export async function createRecipe(recipe: String, userId: string) {
-  const count = await getRecipeCountForUser(userId);
+  const { usageCount, featureLimit} = await getFeatureCountAndLimit(userId, Features.SAVE_RECIPE);
+  if (usageCount >= featureLimit) {
+    throw new Error("You have used all your max usage.");
+  }
+
   const extractedRecipe = parseRecipe(recipe);
   const data = {
     title: extractedRecipe.title,
@@ -39,10 +37,6 @@ export async function createRecipe(recipe: String, userId: string) {
     userId: userId,
   };
   await db.insert(recipes).values(data);
-  await db
-    .update(users)
-    .set({ savedRecipes: count + 1 })
-    .where(eq(users.id, userId));
 }
 
 export async function getRecipeForUser(
