@@ -23,7 +23,7 @@ export async function generateRecipe(
   const user = await currentUser();
   if(!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized", data: null };
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
@@ -33,7 +33,7 @@ export async function generateRecipe(
 
   if(usageCount >= featureLimit) {
     logger.error("'%s' has reached the limit for recipe generation", user.id);
-    throw new Error("You have used all your max usage for today.");
+    return { error: "You have used all your max usage for today.", data: null };
   }
 
   try {
@@ -89,7 +89,7 @@ export async function generateMealPlan(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized", data: null };
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
@@ -99,7 +99,8 @@ export async function generateMealPlan(
 
   if (usageCount >= featureLimit) {
     logger.error("'%s' has reached the limit for meal plan generation", user.id);
-    throw new Error("You have used all your max usage.");
+    return { error: "You have used all your max.", data: null };
+    
   }
 
   try {

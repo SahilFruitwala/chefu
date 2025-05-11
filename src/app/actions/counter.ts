@@ -4,10 +4,13 @@ import { db } from "@/db";
 import { usage, features, SelectFeature } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { and, eq, gt, lt } from "drizzle-orm";
+import { logger } from "@/lib/logger";
+
+const log = logger.child({ module: "counter" });
 
 export const updateFeatureCount = async (
   userId: string,
-  featureName: string,
+  featureName: string
 ) => {
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
     userId,
@@ -15,22 +18,36 @@ export const updateFeatureCount = async (
   );
 
   if (usageCount + 1 > featureLimit) {
-    throw new Error("Feature limit reached");
+    logger.error(
+      "'%s' has reached the limit for %s generation",
+      userId,
+      featureName
+    );
+    return { error: "Feature limit reached" };
   }
 
-  const featureId = (
-    await db
-      .select({ id: features.id })
-      .from(features)
-      .where(eq(features.featureName, featureName))
-  )[0].id;
+  try {
+    const featureId = (
+      await db
+        .select({ id: features.id })
+        .from(features)
+        .where(eq(features.featureName, featureName))
+    )[0].id;
 
-  return await db
-    .update(usage)
-    .set({ usageCount: usageCount + 1 })
-    .where(and(eq(usage.userId, userId), eq(usage.featureId, featureId)))
-    .returning({ count: usage.usageCount });
-    
+    try {
+      return await db
+        .update(usage)
+        .set({ usageCount: usageCount + 1 })
+        .where(and(eq(usage.userId, userId), eq(usage.featureId, featureId)))
+        .returning({ count: usage.usageCount });
+    } catch (error) {
+      log.error("Error updating feature count: %s", error);
+      throw new Error("Error updating feature count");
+    }
+  } catch (error) {
+    log.error("Error fetching feature ID: %s", error);
+    throw new Error("Error fetching feature ID");
+  }
 };
 
 export const getFeatureCountAndLimit = async (
@@ -43,34 +60,54 @@ export const getFeatureCountAndLimit = async (
   const today = new Date();
 
   // TODO: if it is monthy check range else today
-  const featuresData = (
-    await db
-      .select()
-      .from(features)
-      .where(eq(features.featureName, featureName))
-      .limit(1)
-  )[0];
+  let featuresData;
+  try {
+    featuresData = (
+      await db
+        .select()
+        .from(features)
+        .where(eq(features.featureName, featureName))
+        .limit(1)
+    )[0];
+  } catch (error) {
+    log.error("Error fetching feature data: %s", error);
+    throw new Error("Error fetching feature data");
+  }
+
+  if (!featuresData) {
+    log.error("Feature not found: %s", featureName);
+    throw new Error("Feature not found");
+  }
 
   if (featuresData.limitType === "daily") {
-    const usages = await db
-      .select({
-        usageCount: usage.usageCount,
-        featureLimit: usage.featureLimit,
-      })
-      .from(usage)
-      .where(
-        and(
-          eq(usage.userId, userId),
-          eq(usage.featureId, featuresData.id),
-          gt(usage.periodStart, new Date(today.setDate(today.getDate() - 1))),
-          lt(usage.periodStart, new Date(today.setDate(today.getDate() + 1)))
-        )
-      );
-
-    if (usages.length === 0) {
-      return await insertUsage(userId, featuresData, isProUser, today);
+    try {
+      const usages = await db
+        .select({
+          usageCount: usage.usageCount,
+          featureLimit: usage.featureLimit,
+        })
+        .from(usage)
+        .where(
+          and(
+            eq(usage.userId, userId),
+            eq(usage.featureId, featuresData.id),
+            gt(usage.periodStart, new Date(today.setDate(today.getDate() - 1))),
+            lt(usage.periodStart, new Date(today.setDate(today.getDate() + 1)))
+          )
+        );
+      try {
+        if (usages.length === 0) {
+          return await insertUsage(userId, featuresData, isProUser, today);
+        }
+      } catch (error) {
+        log.error("Error inserting usage data: %s", error);
+        throw new Error("Error fetching usage data");
+      }
+      return usages[0];
+    } catch (error) {
+      log.error("Error fetching usage data: %s", error);
+      throw new Error("Error fetching usage data");
     }
-    return usages[0];
   }
 
   // monthly
@@ -81,28 +118,38 @@ export const getFeatureCountAndLimit = async (
     0
   );
 
-  const usages = await db
-    .select({
-      usageCount: usage.usageCount,
-      featureLimit: usage.featureLimit,
-    })
-    .from(usage)
-    .where(
-      and(
-        eq(usage.userId, userId),
-        eq(usage.featureId, featuresData.id),
-        gt(
-          usage.periodStart,
-          new Date(new Date().setDate(today.getDate() - 1))
-        ),
-        lt(usage.periodStart, endOfMonth)
-      )
-    );
+  try {
+    const usages = await db
+      .select({
+        usageCount: usage.usageCount,
+        featureLimit: usage.featureLimit,
+      })
+      .from(usage)
+      .where(
+        and(
+          eq(usage.userId, userId),
+          eq(usage.featureId, featuresData.id),
+          gt(
+            usage.periodStart,
+            new Date(new Date().setDate(today.getDate() - 1))
+          ),
+          lt(usage.periodStart, endOfMonth)
+        )
+      );
 
-  if (usages.length === 0) {
-    return await insertUsage(userId, featuresData, isProUser, today);
+    try {
+      if (usages.length === 0) {
+        return await insertUsage(userId, featuresData, isProUser, today);
+      }
+    } catch (error) {
+      log.error("Error inserting usage data: %s", error);
+      throw new Error("Error fetching usage data");
+    }
+    return usages[0];
+  } catch (error) {
+    log.error("Error fetching usage data: %s", error);
+    throw new Error("Error fetching usage data");
   }
-  return usages[0];
 };
 
 const insertUsage = async (
@@ -114,21 +161,26 @@ const insertUsage = async (
   usageCount: number;
   featureLimit: number;
 }> => {
-  return (
-    await db
-      .insert(usage)
-      .values({
-        userId,
-        featureId: featuresData.id,
-        usageCount: 0,
-        featureLimit: isProUser
-          ? featuresData.premiumLimit
-          : featuresData.freeLimit,
-        periodStart: today,
-      })
-      .returning({
-        usageCount: usage.usageCount,
-        featureLimit: usage.featureLimit,
-      })
-  )[0];
+  try {
+    return (
+      await db
+        .insert(usage)
+        .values({
+          userId,
+          featureId: featuresData.id,
+          usageCount: 0,
+          featureLimit: isProUser
+            ? featuresData.premiumLimit
+            : featuresData.freeLimit,
+          periodStart: today,
+        })
+        .returning({
+          usageCount: usage.usageCount,
+          featureLimit: usage.featureLimit,
+        })
+    )[0];
+  } catch (error) {
+    log.error("Error inserting usage data: %s", error);
+    throw new Error("Error inserting usage data");
+  }
 };

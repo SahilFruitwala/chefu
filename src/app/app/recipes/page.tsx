@@ -62,23 +62,26 @@ export default function RecipeHome() {
       try {
         const response = await generateRecipe(formData);
         if (response.error) {
-          toast.error("Failed to generate recipe. Please try again.");
+          setRecipe(null);
+          toast.error(response.error);
           return;
         }
         const recipeText = response.data!;
         setRecipe(recipeText);
+        !recipeText.includes("Error:") &&
+          toast.success("Recipe Generated", {
+            description: "Your personalized recipe is ready!",
+          });
         try {
           updateFeatureCount(userId, Features.RECIPE);
           increaseCount();
         } catch (error) {
           console.log("Error updating feature count:", error);
+          return;
         }
-        !recipeText.includes("Error:") && toast.success("Recipe Generated", {
-          description: "Your personalized recipe is ready!",
-        });
       } catch (error) {
         setRecipe(null);
-        toast.error(error.message);
+        console.error("Error generating recipe:", error);
       } finally {
         setIsLoading(false);
       }
@@ -87,7 +90,11 @@ export default function RecipeHome() {
 
   const handleOnSave = async () => {
     try {
-      await createRecipe(recipe!, userId);
+      const data = await createRecipe(recipe!, userId);
+      if (data?.error) {
+        toast.error(data?.error);
+        return;
+      }
       try {
         updateFeatureCount(userId, Features.SAVE_RECIPE);
       } catch (error) {
@@ -95,9 +102,7 @@ export default function RecipeHome() {
       }
       toast.success("Recipe saved successfully!");
     } catch (error) {
-      console.log("Error saving recipe:", error);
-      console.log("Error saving recipe:", error.message);
-      toast.error(error.message);
+      console.error(error);
     }
   };
 

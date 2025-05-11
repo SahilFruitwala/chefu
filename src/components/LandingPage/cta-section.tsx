@@ -2,11 +2,13 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import { PricingTable } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { dark, simple } from "@clerk/themes";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { motion } from "@/components/ui/motion";
 
 export function CtaSection() {
   const { theme, setTheme } = useTheme();
@@ -23,12 +25,12 @@ export function CtaSection() {
         </div>
 
         <div className="flex flex-col md:flex-row sm:space-x-4 space-y-4 max-w-5xl mx-auto items-center justify-center">
-          <PricingTable
+          {/* <PricingTable
             appearance={{
               baseTheme: theme === "light" ? simple : dark,
             }}
-          />
-          {/* <motion.div
+          /> */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -45,10 +47,11 @@ export function CtaSection() {
               <CardContent className="flex-grow">
                 <ul className="space-y-2">
                   {[
-                    "5 AI recipe generations per day",
-                    "Save up to 20 recipes",
+                    "3 AI recipe generations per day",
+                    "Save up to 3 recipes every month",
+                    "1 AI meal plan generation per month",
+                    "Save 1 meal plan every month",
                     "Basic printing options",
-                    "Share via link",
                   ].map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -65,7 +68,7 @@ export function CtaSection() {
                 </Button>
               </CardFooter>
             </Card>
-          </motion.div> */}
+          </motion.div>
 
           {/* <motion.div
             initial={{ opacity: 0, y: 20 }}

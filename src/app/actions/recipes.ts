@@ -15,7 +15,7 @@ export async function createRecipe(recipe: String, userId: string) {
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "You have used all your max usage." };
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
@@ -24,7 +24,7 @@ export async function createRecipe(recipe: String, userId: string) {
   );
   if (usageCount >= featureLimit) {
     logger.error("'%s' has reached the limit for recipe save", user.id);
-    throw new Error("You have used all your max usage.");
+    return {'error': "You have used all your max usage."};
   }
 
   const extractedRecipe = parseRecipe(recipe);
@@ -44,7 +44,7 @@ export async function getRecipeForUser(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { 'error': "User is not authorized" };
   }
   return db
     .select({
@@ -63,7 +63,7 @@ export async function getRecipeById(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { 'error': "User is not authorized" };
   }
   return db
     .select()
@@ -76,7 +76,7 @@ export async function deleteRecipeById(recipeId: number, userId: string) {
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { 'error': "User is not authorized" };
   }
   return db
     .delete(recipes)

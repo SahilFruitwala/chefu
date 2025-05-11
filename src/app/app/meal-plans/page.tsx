@@ -62,24 +62,25 @@ export default function MealPlanHome() {
       try {
         const response = await generateMealPlan(formData);
         if (response.error) {
-          toast.error("Failed to generate recipe. Please try again.");
+          setMealPlan(null);
+          toast.error(response.error);
           return;
         }
         const mealPlanText = response.data!;
         setMealPlan(mealPlanText);
+        toast.success("Meal Plan Generated", {
+          description: "Your personalized meal plan is ready!",
+        });
         try {
           updateFeatureCount(userId, Features.MEAL_PLAN);
           increaseCount();
         } catch (error) {
-          console.log("Error updating feature count:", error);
+          console.error("Error updating feature count:", error);
         }
-        toast.success("Meal Plan Generated", {
-          description: "Your personalized meal plan is ready!",
-        });
       } catch (error) {
         setMealPlan(null);
         setFormData({} as MealPlanFormValues);
-        toast.error(error.message);
+        toast.error("An error occurred while generating the meal plan.");
       } finally {
         setIsLoading(false);
       }

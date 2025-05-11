@@ -19,7 +19,7 @@ export async function createMealPlan(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized" };
   }
 
   const { usageCount, featureLimit } = await getFeatureCountAndLimit(
@@ -28,7 +28,7 @@ export async function createMealPlan(
   );
   if (usageCount >= featureLimit) {
     logger.error("'%s' has reached the limit for meal plan save", user.id);
-    throw new Error("You have used all your max usage.");
+    return { error: "You have used all your max usage." };
   }
 
   const extractedRecipe = parseMealPlan(mealPlan);
@@ -49,7 +49,7 @@ export async function getMealPlanForUser(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized" };
   }
 
   return db
@@ -70,7 +70,7 @@ export async function getMealPlanById(
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized" };
   }
   return db
     .select()
@@ -83,7 +83,7 @@ export async function deleteMealPlanById(mealPlansId: number, userId: string) {
   const user = await currentUser();
   if (!user) {
     log.error("User is not authorized");
-    throw new Error("User is not authorized");
+    return { error: "User is not authorized" };
   }
   return db
     .delete(mealPlans)
