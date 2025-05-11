@@ -5,12 +5,6 @@ export const logger: Logger =
     ? // JSON in production
       pino({
         level: "warn",
-        transport: {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-          },
-        },
       })
     : // Pretty print in development
       pino({
