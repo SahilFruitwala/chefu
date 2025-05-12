@@ -44,7 +44,7 @@ export function HeroSection() {
                 Watch demo
               </Button> */}
             </div>
-            <div className="flex items-center gap-4 pt-4">
+            {/* <div className="flex items-center gap-4 pt-4">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
                   <div
@@ -63,7 +63,7 @@ export function HeroSection() {
               <div className="text-sm text-muted-foreground">
                 <span className="font-medium">2,000+</span> happy cooks
               </div>
-            </div>
+            </div> */}
           </motion.div>
 
           <motion.div

@@ -42,10 +42,6 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center space-x-2"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
           >
             <UtensilsCrossed className="h-6 w-6" />
             <span className="font-bold text-xl">Chefu</span>
@@ -64,28 +60,14 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-6">
           <SignedOut>
             <Link
-              href="#features"
+              href="/#features"
               className="text-sm font-medium hover:text-primary/80 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                const section = document.getElementById("features");
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
             >
               Features
             </Link>
             <Link
-              href="#demo"
+              href="/#demo"
               className="text-sm font-medium hover:text-primary/80 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                const section = document.getElementById("demo");
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
             >
               Demo
             </Link>
@@ -96,15 +78,8 @@ export function Header() {
             Testimonials
           </Link> */}
             <Link
-              href="#pricing"
+              href="/#pricing"
               className="text-sm font-medium hover:text-primary/80 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                const section = document.getElementById("pricing");
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
             >
               Pricing
             </Link>
@@ -156,7 +131,7 @@ export function Header() {
               <nav className="flex flex-col gap-4 mt-8 px-4">
                 <SheetClose asChild>
                   <Link
-                    href="#features"
+                    href="/#features"
                     className="text-base font-medium hover:text-primary/80 transition-colors"
                   >
                     Features
@@ -164,7 +139,7 @@ export function Header() {
                 </SheetClose>
                 <SheetClose asChild>
                   <Link
-                    href="#demo"
+                    href="/#demo"
                     className="text-base font-medium hover:text-primary/80 transition-colors"
                   >
                     Demo
@@ -178,7 +153,7 @@ export function Header() {
                 </Link> */}
                 <SheetClose asChild>
                   <Link
-                    href="#pricing"
+                    href="/#pricing"
                     className="text-base font-medium hover:text-primary/80 transition-colors"
                   >
                     Pricing

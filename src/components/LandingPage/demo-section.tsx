@@ -85,8 +85,9 @@ export function DemoSection() {
                     "Input available ingredients",
                     "Specify dietary restrictions",
                     "Set cooking time preferences",
-                    "Choose cuisine style",
+                    // "Choose cuisine style",
                     "Adjust serving size",
+                    "Get step-by-step instructions",
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center">

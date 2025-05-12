@@ -7,6 +7,7 @@ import {
   Cloud,
   Copy,
   Cpu,
+  Dumbbell,
   Edit,
   FileSearch,
   ListChecks,
@@ -61,11 +62,17 @@ export function FeaturesSection() {
         "Create unique recipes based on ingredients, dietary restrictions, and preferences.",
     },
     {
-      icon: <Edit className="h-6 w-6 text-primary" />,
-      title: "Customize Recipes",
+      icon: <Dumbbell className="h-6 w-6 text-primary" />,
+      title: "AI Meal Planner",
       description:
-        "Adjust ingredients, serving sizes, and cooking methods to your liking.",
+        "Create unique meal plan based on days, dietary preference, and calorie count.",
     },
+    // {
+    //   icon: <Edit className="h-6 w-6 text-primary" />,
+    //   title: "Customize Recipes",
+    //   description:
+    //     "Adjust ingredients, serving sizes, and cooking methods to your liking.",
+    // },
     {
       icon: <Save className="h-6 w-6 text-primary" />,
       title: "Save Favorites",
@@ -78,29 +85,29 @@ export function FeaturesSection() {
       description:
         "Get print-friendly versions of any recipe with clear instructions.",
     },
-    {
-      icon: <Share2 className="h-6 w-6 text-primary" />,
-      title: "Share Instantly",
-      description:
-        "Share recipes with friends and family via social media or messaging.",
-    },
-    {
-      icon: <FileSearch className="h-6 w-6 text-primary" />,
-      title: "Smart Search",
-      description:
-        "Find recipes by ingredients, cuisine, or dietary preferences.",
-    },
-    {
-      icon: <MessageSquare className="h-6 w-6 text-primary" />,
-      title: "Cooking Assistance",
-      description: "Get help and answers to cooking questions in real-time.",
-    },
-    {
-      icon: <ListChecks className="h-6 w-6 text-primary" />,
-      title: "Shopping Lists",
-      description:
-        "Generate shopping lists from your selected recipes automatically.",
-    },
+    // {
+    //   icon: <Share2 className="h-6 w-6 text-primary" />,
+    //   title: "Share Instantly",
+    //   description:
+    //     "Share recipes with friends and family via social media or messaging.",
+    // },
+    // {
+    //   icon: <FileSearch className="h-6 w-6 text-primary" />,
+    //   title: "Smart Search",
+    //   description:
+    //     "Find recipes by ingredients, cuisine, or dietary preferences.",
+    // },
+    // {
+    //   icon: <MessageSquare className="h-6 w-6 text-primary" />,
+    //   title: "Cooking Assistance",
+    //   description: "Get help and answers to cooking questions in real-time.",
+    // },
+    // {
+    //   icon: <ListChecks className="h-6 w-6 text-primary" />,
+    //   title: "Shopping Lists",
+    //   description:
+    //     "Generate shopping lists from your selected recipes automatically.",
+    // },
   ];
 
   return (

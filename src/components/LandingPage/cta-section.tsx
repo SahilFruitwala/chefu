@@ -24,13 +24,14 @@ export function CtaSection() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row sm:space-x-4 space-y-4 max-w-5xl mx-auto items-center justify-center">
-          {/* <PricingTable
-            appearance={{
-              baseTheme: theme === "light" ? simple : dark,
-            }}
-          /> */}
-          <motion.div
+        <div className="flex md:flex-row sm:space-x-4 space-y-4 max-w-5xl mx-auto items-center justify-center">
+            <PricingTable
+              appearance={{
+                baseTheme: theme === "light" ? simple : dark,
+              }}
+            />
+          
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -68,7 +69,7 @@ export function CtaSection() {
                 </Button>
               </CardFooter>
             </Card>
-          </motion.div>
+          </motion.div> */}
 
           {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
