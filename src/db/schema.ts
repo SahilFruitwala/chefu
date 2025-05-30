@@ -1,30 +1,22 @@
 import { Features, SubscriptionPlan } from "@/lib/types";
 import { relations } from "drizzle-orm";
 import {
-  pgTable,
+  sqliteTable,
   integer,
   text,
-  serial,
-  varchar,
-  json,
-  timestamp,
+  primaryKey,
   unique,
-  pgEnum,
-} from "drizzle-orm/pg-core";
+} from "drizzle-orm/sqlite-core";
 
-export const subscriptionPlanEnum = pgEnum("subscription_plan", [
-  SubscriptionPlan.BASIC,
-  SubscriptionPlan.PREMIUM,
-]);
-
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey(),
-  email: varchar("email", { length: 256 }).notNull(),
+// SQLite does not support enums, use text and enforce in code
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
   savedRecipes: integer("saved_recipes").default(0).notNull(),
   promptedRecipes: integer("prompted_recipes").default(0).notNull(),
   savedMealPlans: integer("saved_meal_plans").default(0).notNull(),
   promptedMealPlans: integer("prompted_meal_plans").default(0).notNull(),
-  subscriptionPlna: subscriptionPlanEnum("subscription_plan")
+  subscriptionPlan: text("subscription_plan")
     .default(SubscriptionPlan.BASIC)
     .notNull(),
 });
@@ -34,46 +26,36 @@ export const usersRelations = relations(users, ({ many }) => ({
   mealPlans: many(mealPlans),
 }));
 
-export const featuresEnum = pgEnum("feature_name", [
-  Features.RECIPE,
-  Features.SAVE_RECIPE,
-  Features.MEAL_PLAN,
-  Features.SAVE_MEAL_PLAN,
-]);
-
-export const featureLimitTypeEnum = pgEnum("limit_type", [
-  "daily",
-  "monthly",
-]);
-
-export const features = pgTable("features", {
-  id: serial("id").primaryKey(),
-  featureName: featuresEnum("feature_name").notNull(),
-  limitType: featureLimitTypeEnum("limit_type").notNull(),
+export const features = sqliteTable("features", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  featureName: text("feature_name").notNull(), // enforce enum in code
+  limitType: text("limit_type").notNull(), // enforce enum in code
   freeLimit: integer("free_limit").default(3),
   premiumLimit: integer("premium_limit").default(100),
 });
 
-export const usage = pgTable(
+export const usage = sqliteTable(
   "usage",
   {
-    id: serial("id").primaryKey(),
-    userId: varchar("user_id").notNull(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").notNull(),
     featureId: integer("feature_id").notNull(),
     usageCount: integer("usage_count").default(0).notNull(),
-    periodStart: timestamp("period_start").notNull().defaultNow(),
+    periodStart: integer("period_start").notNull().default(0), // store as unix timestamp
     featureLimit: integer("feature_limit").notNull(),
   },
-  (table) => [unique().on(table.userId, table.featureId, table.periodStart)]
+  (table) => [
+    unique().on(table.userId, table.featureId, table.periodStart),
+  ]
 );
 
-export const recipes = pgTable("recipes", {
-  id: serial("id").primaryKey(),
-  title: varchar().notNull(),
-  tags: json().notNull(),
-  recipe: text().notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  userId: varchar("user_id").notNull(),
+export const recipes = sqliteTable("recipes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  tags: text("tags", { mode: "json" }).notNull(), // store JSON as string, parse/stringify in app code
+  recipe: text("recipe").notNull(),
+  createdAt: integer("created_at").default(0).notNull(),
+  userId: text("user_id").notNull(),
 });
 
 export const recipesRelations = relations(recipes, ({ one }) => ({
@@ -83,13 +65,13 @@ export const recipesRelations = relations(recipes, ({ one }) => ({
   }),
 }));
 
-export const mealPlans = pgTable("meal_plans", {
-  id: serial("id").primaryKey(),
-  days: integer().notNull(),
-  tags: json().notNull(),
-  mealPlan: text().notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  userId: varchar("user_id").notNull(),
+export const mealPlans = sqliteTable("meal_plans", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  days: integer("days").notNull(),
+  tags: text("tags", {mode: 'json'}).notNull(),
+  mealPlan: text("meal_plan").notNull(),
+  createdAt: integer("created_at").default(0).notNull(),
+  userId: text("user_id").notNull(),
 });
 
 export const mealPlanRelations = relations(mealPlans, ({ one }) => ({
@@ -113,4 +95,3 @@ export type SelectFeature = typeof features.$inferSelect;
 
 export type InsertUsage = typeof usage.$inferInsert;
 export type SelectUsage = typeof usage.$inferSelect;
-
