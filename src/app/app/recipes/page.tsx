@@ -45,7 +45,7 @@ export default function RecipeHome() {
 
   useEffect(() => {
     if (fromPath && fromPath === "sign-up" && emailAddress) {
-      addUser(emailAddress, userId);
+      // addUser(emailAddress, userId);
       toast.success("You are in now!");
       router.replace(pathname);
     }

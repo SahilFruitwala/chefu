@@ -1,5 +1,5 @@
 import { Features, SubscriptionPlan } from "@/lib/types";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   sqliteTable,
   integer,
@@ -12,6 +12,8 @@ import {
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
   savedRecipes: integer("saved_recipes").default(0).notNull(),
   promptedRecipes: integer("prompted_recipes").default(0).notNull(),
   savedMealPlans: integer("saved_meal_plans").default(0).notNull(),
@@ -19,6 +21,12 @@ export const users = sqliteTable("users", {
   subscriptionPlan: text("subscription_plan")
     .default(SubscriptionPlan.BASIC)
     .notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(
+    sql`(strftime('%s', 'now'))`
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).default(
+    sql`(strftime('%s', 'now'))`
+  ),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
